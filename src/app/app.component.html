@@ -1,1 +1,31 @@
-<mat-slide-toggle>Toggle me!</mat-slide-toggle>
+<mat-sidenav-container class="example-container" >
+  <mat-sidenav #sidenav [mode]="'side'">
+    <mat-nav-list (click)="sidenav.toggle()">
+      <a mat-list-item routerLink="/">
+        <mat-icon fontIcon="home"></mat-icon>
+        <span>Home</span>
+      </a>
+
+      <a mat-list-item routerLink="/about">
+        <mat-icon fontIcon="star"></mat-icon>
+        <span>About</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button aria-label="Button with menu icon" (click)="sidenav.toggle()">
+        <mat-icon fontIcon="menu"></mat-icon>
+      </button>
+      <span>Thomas Schulte</span>
+      <span class="spacer"></span>
+      <button mat-icon-button aria-label="Button with heart icon">
+        <mat-icon fontIcon="favorite"></mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Button with share icon">
+        <mat-icon fontIcon="bolt"></mat-icon>
+      </button>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
