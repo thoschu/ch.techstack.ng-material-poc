@@ -17,6 +17,16 @@
       <button mat-icon-button aria-label="Button with menu icon" (click)="sidenav.toggle()">
         <mat-icon fontIcon="menu"></mat-icon>
       </button>
+      <!-- Dropdown -->
+      <a mat-button [matMenuTriggerFor]="dropdown">
+        <mat-icon fontIcon="build"></mat-icon>
+        <span>Config</span>
+      </a>
+      <mat-menu #dropdown>
+        <button mat-menu-item>XXX</button>
+        <button mat-menu-item>YYY</button>
+      </mat-menu>
+      <!-- -->
       <span>Thomas Schulte</span>
       <span class="spacer"></span>
       <button mat-icon-button aria-label="Button with heart icon">
@@ -27,5 +37,6 @@
       </button>
     </mat-toolbar>
     <router-outlet></router-outlet>
+    <div>xxxxxx</div>
   </mat-sidenav-content>
 </mat-sidenav-container>
