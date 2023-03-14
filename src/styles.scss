@@ -1,6 +1,40 @@
 @use '@angular/material' as mat;
 
-// @include mat.core();
+@include mat.core();
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Iso&display=swap');
+
+$this-dark-primary: mat.define-palette(mat.$indigo-palette, 500);
+$this-dark-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$this-light-primary: mat.define-palette(mat.$cyan-palette);
+$this-light-accent: mat.define-palette(mat.$pink-palette);
+$this-app-warn: mat.define-palette(mat.$red-palette);
+
+$this-typography: mat.define-typography-config(
+  $font-family: 'Rubik Iso',
+);
+
+$dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $this-dark-primary,
+    accent: $this-dark-accent,
+    warn: $this-app-warn
+  ),
+  // Only include `typography` and `density` in the default dark theme.
+  typography: $this-typography,
+  density: 0,
+));
+
+$light-theme: mat.define-light-theme((
+  color: (
+    primary: $this-light-primary,
+    accent: $this-light-accent,
+    warn: $this-app-warn
+  ),
+));
+
+@include mat.core-theme($dark-theme);
+@include mat.all-component-themes($dark-theme);
 
 html, body { height: 100%; margin: 0; }
 
