@@ -1,6 +1,8 @@
 <mat-tab-group>
   <mat-tab label="Hamburg">
-    <mat-card></mat-card>
+    <mat-card>{{title | letterCount: '-c'}}</mat-card>
+    <mat-card>{{title | uppercase}}</mat-card>
+    <mat-card>{{title | uppercase | letterCount: '-c'}}</mat-card>
   </mat-tab>
   <mat-tab label="Berlin"></mat-tab>
   <mat-tab label="Bielefeld"></mat-tab>

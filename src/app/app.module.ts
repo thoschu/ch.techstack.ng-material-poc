@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -7,13 +7,54 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
+import * as Rollbar from 'rollbar';
+import { Configuration } from 'rollbar';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import {MatTabsModule} from "@angular/material/tabs";
-import {MatCardModule} from "@angular/material/card";
+import { environment } from '../environments/environment';
+import packageJson from '../../package.json';
+
+import { NgLetterCountModule } from 'ng-letter-count-2';
+
+@Injectable()
+export class RollbarErrorHandler implements ErrorHandler {
+  public static readonly RollbarServiceInjectionToken = new InjectionToken<Rollbar>('rollbar');
+  private static readonly ROLLBAR_CONFIG: Configuration = {
+    accessToken: '987a946401c943b79a4d3e965e3579e8',
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+    captureEmail: true,
+    captureIp: true,
+    captureUsername: true,
+    environment: environment.name,
+    enabled: !environment.production,
+    ignoredMessages: [],
+    payload: {
+      code_version: packageJson.version,
+      custom_data: '13',
+      environment: 'dev',
+      context: 'private',
+      server: {}
+    }
+  };
+
+  constructor(
+    @Inject(RollbarErrorHandler.RollbarServiceInjectionToken) private readonly rollbar: Rollbar
+  ) {}
+
+  public handleError(err: Record<'originalError', Error> & Error) : void {
+    this.rollbar.error(err.originalError || err);
+  }
+
+  public static rollbarFactory(): Rollbar {
+    return new Rollbar(RollbarErrorHandler.ROLLBAR_CONFIG);
+  }
+}
 
 @NgModule({
   declarations: [
@@ -34,10 +75,13 @@ import {MatCardModule} from "@angular/material/card";
     ReactiveFormsModule,
     MatMenuModule,
     MatTabsModule,
-    MatCardModule
+    MatCardModule,
+    NgLetterCountModule
   ],
-  providers: [],
+  providers: [
+    { provide: ErrorHandler, useClass: RollbarErrorHandler },
+    { provide: RollbarErrorHandler.RollbarServiceInjectionToken, useFactory: RollbarErrorHandler.rollbarFactory }
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }

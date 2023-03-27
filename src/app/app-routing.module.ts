@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ExtraOptions, NoPreloading, RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from "./home/home.component";
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   imports: [
