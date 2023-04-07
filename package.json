@@ -2,11 +2,14 @@
   "name": "ng-material-poc",
   "version": "0.0.0",
   "scripts": {
+    "i": "npm i",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "clean": "npm run clean:node_modules",
+    "clean:node_modules": "npx rimraf node_modules"
   },
   "private": true,
   "dependencies": {
