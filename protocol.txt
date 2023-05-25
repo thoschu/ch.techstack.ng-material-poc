@@ -4,3 +4,5 @@ ng update @angular/cli @angular/core
 
 ---
 
+git branch -m <old-name> <new-name>
+git push origin --delete old-name
