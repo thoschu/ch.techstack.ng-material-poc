@@ -8,6 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "ngrok": "npx ngrok http 4200",
     "clean": "npm run clean:node_modules",
     "clean:node_modules": "npx rimraf node_modules"
   },
