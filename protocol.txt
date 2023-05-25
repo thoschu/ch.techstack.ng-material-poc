@@ -4,6 +4,8 @@ git push origin --delete old-name
 
 git checkout main
 
+git branch
+
 ---
 
 https://nodejs.org/en/download
@@ -13,3 +15,17 @@ npm install -g @angular/cli
 ng update @angular/cli @angular/core
 
 ---
+
+https://m3.material.io/
+
+https://material.angular.io/
+
+---
+
+https://material.angular.io/guide/getting-started
+
+ng add @angular/material
+
+https://fonts.google.com/
+
+https://fonts.google.com/icons
