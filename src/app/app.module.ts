@@ -5,16 +5,20 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from "@angular/material/button";
+import { MatRadioModule } from "@angular/material/radio";
+import { ReactiveFormsModule } from "@angular/forms";
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {MatButtonModule} from "@angular/material/button";
-import {MatRadioModule} from "@angular/material/radio";
-import {ReactiveFormsModule} from "@angular/forms";
-
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
