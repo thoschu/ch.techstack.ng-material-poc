@@ -11,15 +11,16 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
-import * as Rollbar from 'rollbar';
-import { Configuration } from 'rollbar';
+import { NgLetterCountModule } from 'ng-letter-count-2';
+// @ts-ignore
+import Rollbar, { Configuration } from 'rollbar';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { environment } from '../environments/environment';
+// @ts-ignore
 import packageJson from '../../package.json';
-
-import { NgLetterCountModule } from 'ng-letter-count-2';
 
 @Injectable()
 export class RollbarErrorHandler implements ErrorHandler {

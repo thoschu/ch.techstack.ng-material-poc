@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import Rollbar from 'rollbar';
+import * as Rollbar from 'rollbar';
 import { RollbarErrorHandler } from "./app.module";
 
 @Component({
