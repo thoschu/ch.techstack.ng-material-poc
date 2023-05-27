@@ -1,12 +1,12 @@
-<mat-sidenav-container class="example-container">
+<mat-sidenav-container class="container">
   <mat-sidenav #sidenav [mode]="'side'">
     <mat-nav-list (click)="sidenav.toggle()">
-      <a mat-list-item routerLink="/">
+      <a mat-list-item routerLink="/" routerLinkActive="active">
         <mat-icon fontIcon="home"></mat-icon>
         <span>Home</span>
       </a>
 
-      <a mat-list-item routerLink="/about">
+      <a mat-list-item routerLink="/about" routerLinkActive="active">
         <mat-icon fontIcon="star"></mat-icon>
         <span>About</span>
       </a>

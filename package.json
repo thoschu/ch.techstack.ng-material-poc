@@ -1,7 +1,8 @@
 {
   "name": "ng-material-poc",
-  "version": "0.0.0",
+  "version": "0.0.6",
   "scripts": {
+    "ci": "npm ci",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
