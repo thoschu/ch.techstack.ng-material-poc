@@ -12,12 +12,12 @@ import { HomeComponent } from "./home/home.component";
   exports: [RouterModule]
 })
 export class AppRoutingModule {
-  private static ROUTES_CONFIG: ExtraOptions = {
+  private static readonly ROUTES_CONFIG: ExtraOptions = {
     useHash: false,
     enableTracing: true,
     preloadingStrategy: NoPreloading
   };
-  private static ROUTES: Routes = [{
+  private static readonly ROUTES: Routes = [{
     path: 'home',
     component: HomeComponent
   }, {
