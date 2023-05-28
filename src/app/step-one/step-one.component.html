@@ -48,10 +48,18 @@
     </mat-form-field>
   </p>
   <p>
-      <!-- radio button -->
-      <mat-radio-group formControlName="option">
-        <mat-radio-button value="auto">Auto</mat-radio-button>
-        <mat-radio-button value="always">Always</mat-radio-button>
-      </mat-radio-group>
+    <!-- select -->
+    <mat-form-field>
+      <mat-select formControlName="option" placeholder="Select now..." multiple="true">
+        <mat-option></mat-option>
+        <mat-optgroup label="A">
+          <mat-option value="aries">♈</mat-option>
+          <mat-option value="gemini">♊</mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="B">
+          <mat-option value="cancer">♋</mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
   </p>
 </div>
