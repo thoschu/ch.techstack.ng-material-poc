@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   protected title: string = 'ng-material-poc';
+  protected isLinear: boolean = true;
 }
