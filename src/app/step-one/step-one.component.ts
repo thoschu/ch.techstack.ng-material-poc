@@ -19,7 +19,5 @@ export class StepOneComponent {
       description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       tel: ['', [Validators.required, Validators.pattern(this.telRegex)]]
     });
-
-    this.formGroup.valueChanges.subscribe((value) => {});
   }
 }
