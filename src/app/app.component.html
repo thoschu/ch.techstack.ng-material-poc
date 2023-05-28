@@ -10,7 +10,7 @@
         <button mat-raised-button matStepperNext color="accent">Next</button>
       </div>
     </mat-step>
-    <mat-step errorMessage="⛳ in error" label="Fill out your yyy">
+    <mat-step errorMessage="⛳ in error" label="Fill out your yyy" [optional]="isOptional">
       <ng-template matStepLabel>⛳ B</ng-template>
       <app-step-two></app-step-two>
       <div>
