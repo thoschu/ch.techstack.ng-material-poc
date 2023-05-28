@@ -1,3 +1,4 @@
+import { DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,19 +13,17 @@ import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgLetterCountModule } from 'ng-letter-count-2';
-// @ts-ignore
 import Rollbar, { Configuration } from 'rollbar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { environment } from '../environments/environment';
-// @ts-ignore
-import packageJson from '../../package.json';
+import packageDotJson from '../../package.json';
 
 @Injectable()
 export class RollbarErrorHandler implements ErrorHandler {
-  public static readonly RollbarServiceInjectionToken = new InjectionToken<Rollbar>('rollbar');
+  public static readonly RollbarServiceInjectionToken: InjectionToken<Rollbar> = new InjectionToken<Rollbar>('rollbar');
   private static readonly ROLLBAR_CONFIG: Configuration = {
     accessToken: '987a946401c943b79a4d3e965e3579e8',
     captureUncaught: true,
@@ -36,7 +35,7 @@ export class RollbarErrorHandler implements ErrorHandler {
     enabled: !environment.production,
     ignoredMessages: [],
     payload: {
-      code_version: packageJson.version,
+      code_version: packageDotJson.version,
       custom_data: '13',
       environment: 'dev',
       context: 'private',
@@ -77,7 +76,8 @@ export class RollbarErrorHandler implements ErrorHandler {
     MatMenuModule,
     MatTabsModule,
     MatCardModule,
-    NgLetterCountModule
+    NgLetterCountModule,
+    NgOptimizedImage
   ],
   providers: [
     { provide: ErrorHandler, useClass: RollbarErrorHandler },
@@ -85,4 +85,18 @@ export class RollbarErrorHandler implements ErrorHandler {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+  ) {
+    document.addEventListener('visibilitychange', (event: Event): void => {
+      const { hidden }: { hidden: boolean } = document;
+
+      if (hidden) {
+        console.log('🔒');
+      } else {
+        console.log(event);
+      }
+    });
+  }
+}

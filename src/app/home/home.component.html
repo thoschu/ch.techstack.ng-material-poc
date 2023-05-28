@@ -1,9 +1,46 @@
 <mat-tab-group>
-  <mat-tab label="Hamburg">
+  <mat-tab label="hamburg">
     <mat-card>{{title | letterCount: '-c'}}</mat-card>
     <mat-card>{{title | uppercase}}</mat-card>
     <mat-card>{{title | uppercase | letterCount: '-c'}}</mat-card>
   </mat-tab>
-  <mat-tab label="Berlin"></mat-tab>
-  <mat-tab label="Bielefeld"></mat-tab>
+  <mat-tab label="berlin">
+
+    <mat-card class="mat-elevation-z23">
+      <mat-card-header>
+        <mat-card-title>Actions Buttons</mat-card-title>
+        <mat-card-subtitle>Start</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-md-image alt="" [ngSrc]="imgPath" height="64" width="64">
+      <mat-card-actions>
+        <button mat-button>LIKE</button>
+        <button mat-button>SHARE</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <br>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-title>Actions Buttons</mat-card-title>
+          <img mat-card-avatar alt="hacker" [ngSrc]="'/assets/img/hacker.png'" height="32" width="32">
+          <mat-card-subtitle>End</mat-card-subtitle>
+        </mat-card-title-group>
+      </mat-card-header>
+      <img mat-card-image [ngSrc]="imgPath" alt="qr-code" height="128" width="128">
+      <mat-card-content>
+        <p>XXX</p>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button color="accent">LIKE</button>
+        <button mat-raised-button>SHARE</button>
+      </mat-card-actions>
+      <mat-card-footer><span>by Tom S.</span></mat-card-footer>
+    </mat-card>
+
+  </mat-tab>
+  <mat-tab label="bielefeld">
+    <a href="https://techstack.ch/snake/">GAME</a>
+  </mat-tab>
 </mat-tab-group>
