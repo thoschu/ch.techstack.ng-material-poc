@@ -9,57 +9,14 @@
     </mat-form-field>
   </p>
   <p>
+    <!-- date-picker -->
     <mat-form-field appearance="outline">
-      <mat-label>Outline form field</mat-label>
-      <input matInput placeholder="Placeholder" formControlName="category">
-      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-      <mat-hint>Hint</mat-hint>
-    </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field>
       <mat-label>Choose a date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="releasedAt">
-      <mat-hint align="start">MM/DD/YYYY</mat-hint>
+      <input matInput [matDatepicker]="picker" formControlName="releasedAt" placeholder="Release date!">
+      <mat-hint align="start">DD/MM/YYYY</mat-hint>
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
   </p>
-  <p>
-    <mat-checkbox formControlName="downloadsAllowed">Hide required marker</mat-checkbox>
-  </p>
-  <p>
-    <mat-form-field floatLabel="always">
-      <mat-label>Description</mat-label>
-      <input matInput type="text" placeholder="Foo bar baz" formControlName="description" #desc>
-      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-      <mat-hint align="end" *ngIf="formGroup.get('description')?.valid; else errorOut">{{ desc.value.length }}</mat-hint>
-      <ng-template #errorOut>
-        <mat-error>invalid</mat-error>
-      </ng-template>
-      <span matTextPrefix>+49</span>
-      <span matTextSuffix>☎</span>
-    </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field appearance="fill">
-      <mat-label>Tel.:</mat-label>
-      <input matInput formControlName="tel" placeholder="+49 15151212229" type="tel">
-    </mat-form-field>
-  </p>
-  <p>
-    <!-- select -->
-    <mat-form-field>
-      <mat-select formControlName="option" placeholder="Select now..." multiple="true">
-        <mat-option></mat-option>
-        <mat-optgroup label="A">
-          <mat-option value="aries">♈</mat-option>
-          <mat-option value="gemini">♊</mat-option>
-        </mat-optgroup>
-        <mat-optgroup label="B">
-          <mat-option value="cancer">♋</mat-option>
-        </mat-optgroup>
-      </mat-select>
-    </mat-form-field>
-  </p>
+
 </div>
