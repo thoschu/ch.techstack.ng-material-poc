@@ -4,5 +4,13 @@
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
 
+
+}
+app-step-three,
+app-step-two,
+app-step-one {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}

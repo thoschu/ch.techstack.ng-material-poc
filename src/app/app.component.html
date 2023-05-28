@@ -3,11 +3,11 @@
   <mat-horizontal-stepper class="mat-elevation-z5"  [linear]="isLinear" labelPosition="bottom" #stepper>
     <mat-step errorMessage="⛵ in error" label="Fill out your xxx">
       <ng-template matStepLabel>⛵ A</ng-template>
-      <app-step-one></app-step-one>
+      <app-step-one #stepOne></app-step-one>
       <div>
         <button mat-raised-button matStepperPrevious color="primary">Back</button>
         &#160;
-        <button mat-raised-button matStepperNext color="accent">Next</button>
+        <button mat-raised-button matStepperNext color="accent" (click)="next(stepOne)">Next</button>
       </div>
     </mat-step>
     <mat-step errorMessage="⛳ in error" label="Fill out your yyy" [optional]="isOptional">
