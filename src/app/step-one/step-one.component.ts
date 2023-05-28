@@ -17,7 +17,8 @@ export class StepOneComponent {
       releasedAt: [new Date(), Validators.required],
       downloadsAllowed: [true, Validators.requiredTrue],
       description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      tel: ['', [Validators.required, Validators.pattern(this.telRegex)]]
+      tel: ['', [Validators.required, Validators.pattern(this.telRegex)]],
+      option: ['always', Validators.required]
     });
   }
 }
