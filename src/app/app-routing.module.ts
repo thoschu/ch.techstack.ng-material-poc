@@ -1,6 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ExtraOptions, NoPreloading, RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { AboutComponent } from "./about/about.component";
 
 @NgModule({
   imports: [
@@ -20,6 +21,9 @@ export class AppRoutingModule {
   private static ROUTES: Routes = [{
     path: 'home',
     component: HomeComponent
+  }, {
+    path: 'about/:id',
+    component: AboutComponent
   }, {
     path: '',
     redirectTo: '/home',

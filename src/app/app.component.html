@@ -5,7 +5,7 @@
         <mat-icon fontIcon="home"></mat-icon>
         <span>Home</span>
       </a>
-      <a mat-list-item routerLink="/about">
+      <a mat-list-item [routerLink]="['/about', 77]" [queryParams]="{ debug: true }" [state]="{ tracingId: 13 }">
         <mat-icon fontIcon="star"></mat-icon>
         <span>About</span>
       </a>

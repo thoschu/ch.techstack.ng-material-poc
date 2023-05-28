@@ -5,6 +5,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@100&display=swap');
 
+// @import '@angular/material/prebuilt-themes/purple-green.css';
+
 $this-dark-primary: mat.define-palette(mat.$indigo-palette, 500);
 $this-dark-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 $this-light-primary: mat.define-palette(mat.$cyan-palette);

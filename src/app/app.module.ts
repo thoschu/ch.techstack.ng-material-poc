@@ -20,6 +20,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { environment } from '../environments/environment';
 import packageDotJson from '../../package.json';
+import { AboutComponent } from './about/about.component';
 
 @Injectable()
 export class RollbarErrorHandler implements ErrorHandler {
@@ -59,7 +60,8 @@ export class RollbarErrorHandler implements ErrorHandler {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    AboutComponent
   ],
   imports: [
     AppRoutingModule.forRoot(),
