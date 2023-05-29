@@ -4,10 +4,12 @@
   "scripts": {
     "ci": "npm ci",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npx concurrently \"npm run server\" \"npm run serve\"",
+    "serve": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "server": "npx json-server --watch db.json"
   },
   "private": true,
   "dependencies": {
