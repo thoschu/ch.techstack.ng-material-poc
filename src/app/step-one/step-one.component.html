@@ -13,8 +13,18 @@
     <mat-checkbox
       formControlName="downloadsAllowed"
       color="primary"
+      [indeterminate]="true"
       [aria-label]="'isSubscribedToEmailsMessage'">
       <mat-icon matSuffix>download</mat-icon>
     </mat-checkbox>
+    <br>
+    <mat-hint [ngStyle]="{color: 'green'}" align="end" *ngIf="formGroup.get('downloadsAllowed')?.valid; else errorOut">
+      <mat-icon matSuffix>check</mat-icon>
+    </mat-hint>
+    <ng-template #errorOut>
+      <mat-error>
+        <mat-icon matSuffix>block</mat-icon>
+      </mat-error>
+    </ng-template>
   </p>
 </div>
