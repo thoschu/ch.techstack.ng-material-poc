@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [];
-
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(AppRoutingModule.routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
+  private static readonly routes: Routes = [];
   constructor() {
     console.log('AppRoutingModule constructor');
   }
