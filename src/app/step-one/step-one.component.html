@@ -1,11 +1,6 @@
 <p>A step-one works!</p>
 <div [formGroup]="formGroup">
   <p>
-    <mat-form-field appearance="fill">
-      <textarea matInput name="review" placeholder="Placeholder" formControlName="text"></textarea>
-    </mat-form-field>
-  </p>
-  <p>
     <mat-form-field appearance="outline">
       <mat-label>Fill form field with random text</mat-label>
       <textarea matInput
@@ -14,15 +9,6 @@
                 [cdkAutosizeMaxRows]="15"
                 name="reviewNew" rows="4" cols="50" placeholder="Placeholder" formControlName="text"></textarea>
       <mat-icon matIconSuffix>star</mat-icon>
-      <mat-hint>Hint</mat-hint>
-    </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field>
-      <mat-label>Fill form field with random text</mat-label>
-      <textarea matInput
-                cdkTextareaAutosize
-                placeholder="Description" formControlName="text"></textarea>
       <mat-hint>Hint</mat-hint>
     </mat-form-field>
   </p>
