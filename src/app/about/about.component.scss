@@ -17,13 +17,23 @@ table {
     background: #d3d3d3;
   }
 
-  .row {
+  .header-row {
     background: #2c2c2c;
   }
 
-  .mat-mdc-row:hover {
-    .mat-mdc-cell {
-      background: #1a1a1a;
+  .mat-mdc-row {
+    cursor: url(/assets/img/cursor.png), auto;
+
+    &:nth-child(even):hover {
+      .mat-mdc-cell {
+        background: #a6a6a6;
+      }
+    }
+
+    &:nth-child(odd):hover {
+      .mat-mdc-cell {
+        background: #9a9a9a;
+      }
     }
   }
 }
