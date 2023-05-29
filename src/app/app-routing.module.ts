@@ -9,8 +9,9 @@ import { AboutComponent } from "./about/about.component";
 })
 export class AppRoutingModule {
   protected static readonly routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'about', component: AboutComponent },
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent },
+    { path: 'about/:id', component: AboutComponent },
     { path: '**', component: HomeComponent }
   ];
 }

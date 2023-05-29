@@ -1,0 +1,29 @@
+table {
+  width: 100vw;
+
+  .name-cell {
+    background: #808080;
+  }
+
+  .weight-cell {
+    background: #949494;
+  }
+
+  .symbol-cell {
+    background: #a9a9a9;
+  }
+
+  .clicked-cell {
+    background: #d3d3d3;
+  }
+
+  .row {
+    background: #2c2c2c;
+  }
+
+  .mat-mdc-row:hover {
+    .mat-mdc-cell {
+      background: #1a1a1a;
+    }
+  }
+}

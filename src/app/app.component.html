@@ -1,11 +1,11 @@
 <mat-sidenav-container class="container">
   <mat-sidenav #sidenav [mode]="'side'">
     <mat-nav-list (click)="sidenav.toggle()">
-      <a mat-list-item routerLink="/" routerLinkActive="active">
+      <a mat-list-item routerLink="/home">
         <mat-icon fontIcon="home"></mat-icon>
         <span>Home</span>
       </a>
-      <a mat-list-item routerLink="/about" routerLinkActive="active">
+      <a mat-list-item routerLink="/about">
         <mat-icon fontIcon="star"></mat-icon>
         <span>About</span>
       </a>
@@ -18,10 +18,10 @@
       </button>
       <span>Thomas Schulte</span>
       <span class="spacer"></span>
-      <button mat-icon-button aria-label="Button with heart icon">
+      <button mat-icon-button aria-label="Button with heart icon" routerLink="/home" routerLinkActive="active">
         <mat-icon fontIcon="favorite"></mat-icon>
       </button>
-      <button mat-icon-button aria-label="Button with share icon">
+      <button mat-icon-button aria-label="Button with share icon" [routerLink]="['/about', '77']" routerLinkActive="active">
         <mat-icon fontIcon="bolt"></mat-icon>
       </button>
     </mat-toolbar>
