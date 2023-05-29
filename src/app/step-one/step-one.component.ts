@@ -14,17 +14,7 @@ export class StepOneComponent {
   constructor(private readonly formBuilder: FormBuilder) {
     this.formGroup = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email, Validators.minLength(5)]],
-      releasedAt: [new Date(), Validators.required]
+      downloadsAllowed: [false, Validators.requiredTrue]
     });
   }
-
-  protected dateClass: MatCalendarCellClassFunction<Date> = (cellDate: Date, view: ('month' | 'year' | 'multi-year')): string => {
-    const date: number = cellDate.getDate();
-
-    if(view === 'month') {
-      return (date === 1) ? 'highlight-date-1' : '';
-    }
-
-    return '';
-  };
 }
