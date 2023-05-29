@@ -2,29 +2,28 @@
 <div [formGroup]="formGroup">
   <p>
     <mat-form-field appearance="fill">
-      <mat-label>Fill form field EMAIL</mat-label>
-      <input matInput type="email" placeholder="Placeholder" formControlName="email">
-      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      <textarea matInput name="review" placeholder="Placeholder" formControlName="text"></textarea>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field appearance="outline">
+      <mat-label>Fill form field with random text</mat-label>
+      <textarea matInput
+                cdkTextareaAutosize
+                [cdkAutosizeMinRows]="2"
+                [cdkAutosizeMaxRows]="15"
+                name="reviewNew" rows="4" cols="50" placeholder="Placeholder" formControlName="text"></textarea>
+      <mat-icon matIconSuffix>star</mat-icon>
       <mat-hint>Hint</mat-hint>
     </mat-form-field>
   </p>
   <p>
-    <!-- check-box -->
-    <mat-checkbox
-      formControlName="downloadsAllowed"
-      color="primary"
-      [indeterminate]="true"
-      [aria-label]="'isSubscribedToEmailsMessage'">
-      <mat-icon matSuffix>download</mat-icon>
-    </mat-checkbox>
-    <br>
-    <mat-hint [ngStyle]="{color: 'green'}" align="end" *ngIf="formGroup.get('downloadsAllowed')?.valid; else errorOut">
-      <mat-icon matSuffix>check</mat-icon>
-    </mat-hint>
-    <ng-template #errorOut>
-      <mat-error>
-        <mat-icon matSuffix>block</mat-icon>
-      </mat-error>
-    </ng-template>
+    <mat-form-field>
+      <mat-label>Fill form field with random text</mat-label>
+      <textarea matInput
+                cdkTextareaAutosize
+                placeholder="Description" formControlName="text"></textarea>
+      <mat-hint>Hint</mat-hint>
+    </mat-form-field>
   </p>
 </div>
