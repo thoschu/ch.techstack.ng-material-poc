@@ -3,13 +3,20 @@
   <p>
     <mat-form-field appearance="outline">
       <mat-label>Fill form field with random text</mat-label>
-      <textarea matInput
-                cdkTextareaAutosize
-                [cdkAutosizeMinRows]="2"
-                [cdkAutosizeMaxRows]="15"
-                name="reviewNew" rows="4" cols="50" placeholder="Placeholder" formControlName="text"></textarea>
+      <!-- tooltip -->
+      <textarea
+        matInput
+        placeholder="Placeholder"
+        formControlName="text"
+        [matTooltip]="'Info about the hint'"
+        matTooltipPosition="below"
+        [matTooltipShowDelay]="tooltipShowDelay"
+        [matTooltipHideDelay]="90000"
+        matTooltipDisabled="false"
+        matTooltipClass="tool-tip"
+      ></textarea>
       <mat-icon matIconSuffix>star</mat-icon>
-      <mat-hint>Hint</mat-hint>
+      <mat-hint title="Title of the hint">Hint</mat-hint>
     </mat-form-field>
   </p>
 </div>

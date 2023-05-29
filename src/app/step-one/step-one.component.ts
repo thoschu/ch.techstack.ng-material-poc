@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class StepOneComponent {
   private static readonly LOREM_IPSUM_TEXT: string = `Lorem ipsum dolor sit amet.`;
+  protected tooltipShowDelay: number = 1000;
   public readonly formGroup: FormGroup;
 
   constructor(private readonly formBuilder: FormBuilder) {
