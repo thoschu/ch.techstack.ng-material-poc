@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {MatCalendarCellClassFunction} from "@angular/material/datepicker";
+import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-step-one',
   templateUrl: './step-one.component.html',
-  styleUrls: ['./step-one.component.scss']
+  styleUrls: ['./step-one.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class StepOneComponent {
   public readonly formGroup: FormGroup;
@@ -17,15 +18,13 @@ export class StepOneComponent {
     });
   }
 
-  protected dateClass(): MatCalendarCellClassFunction<Date> {
+  protected dateClass: MatCalendarCellClassFunction<Date> = (cellDate: Date, view: ('month' | 'year' | 'multi-year')): string => {
+    const date: number = cellDate.getDate();
 
-    return (cellDate: Date, view): string => {
-      // 'month' | 'year' | 'multi-year'
-      const date: number = cellDate.getDate();
+    if(view === 'month') {
+      return (date === 1) ? 'highlight-date-1' : '';
+    }
 
-      if(view == 'month') { }
-
-      return ''
-    };
-  }
+    return '';
+  };
 }
