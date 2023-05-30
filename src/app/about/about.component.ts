@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { clone } from 'ramda';
-import { noop, Observable, tap, throwError } from 'rxjs';
+import { finalize, noop, Observable, tap, throwError } from 'rxjs';
 import { catchError, delay } from 'rxjs/operators';
 
 import { AboutService } from './about.service';
@@ -22,6 +22,7 @@ export interface PeriodicElement {
 export class AboutComponent implements OnInit {
   protected readonly displayedColumns: string[] = ['id', 'name', 'weight', 'symbol', 'clicked'];
   protected dataSource: PeriodicElement[] = [];
+  protected loading: boolean = true;
   constructor(
     private readonly route: ActivatedRoute,
     private readonly aboutService: AboutService
@@ -37,7 +38,9 @@ export class AboutComponent implements OnInit {
         catchError((error: Error) => {
           console.error(error); // https://rollbar.com/thoschu
           return throwError(() => error);
-        }))
+        }),
+        finalize((): boolean => this.loading = false),
+      )
       .subscribe(noop);
   }
 

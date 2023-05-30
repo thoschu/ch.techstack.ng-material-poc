@@ -38,3 +38,6 @@
   <tr class="header-row" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let rowData; columns: displayedColumns;" (click)="clicked(rowData)"></tr>
 </table>
+<div style="justify-content: center; display: flex;" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>
