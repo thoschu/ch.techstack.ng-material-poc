@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { clone } from 'ramda';
 import { noop, Observable, tap, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, delay } from 'rxjs/operators';
 
 import { AboutService } from './about.service';
 
@@ -29,12 +29,13 @@ export class AboutComponent implements OnInit {
     const periodicElements$: Observable<PeriodicElement[]> = aboutService.periodicElements$;
 
     periodicElements$
+      .pipe(delay(2000))
       .pipe(
         tap((elements: PeriodicElement[]): void => {
           this.dataSource = clone<PeriodicElement[]>(elements);
         }),
         catchError((error: Error) => {
-          console.error(error);
+          console.error(error); // https://rollbar.com/thoschu
           return throwError(() => error);
         }))
       .subscribe(noop);

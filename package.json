@@ -5,12 +5,15 @@
     "ci": "npm ci",
     "ng": "ng",
     "start": "npx concurrently \"npm run server\" \"npm run serve\"",
+    "start:ssl": "npx concurrently \"npm run server\" \"npm run serve:ssl\"",
     "serve": "ng serve",
+    "serve:ssl": "ng serve --ssl true --ssl-key localhost-key.pem --ssl-cert localhost.pem",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "server": "npx json-server --watch db.json",
-    "ngrok": "npx ngrok http 4200"
+    "ngrok": "npx ngrok http 4200",
+    "mkcert": "echo 'install mkcert like: brew install mkcert' && echo 'mkcert -install' && echo 'mkcert localhost' && exit 1"
   },
   "private": true,
   "dependencies": {
@@ -41,7 +44,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "mkcert": "^1.5.1",
     "typescript": "~4.9.4"
   }
 }

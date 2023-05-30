@@ -8,7 +8,7 @@ import { PeriodicElement } from './about.component';
   providedIn: 'root'
 })
 export class AboutService {
-  private static readonly URL: string = 'http://localhost:3000/periodicElements';
+  private static readonly URL: string = '/periodicElements';
 
   constructor(private readonly http: HttpClient) {}
 
