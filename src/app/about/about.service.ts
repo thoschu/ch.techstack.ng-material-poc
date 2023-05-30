@@ -10,6 +10,6 @@ import {PeriodicElement} from "./about.component";
 export class AboutService {
 
   constructor(private readonly http: HttpClient) {
-    const req = http.get<PeriodicElement[]>('/api/heroes');
+    const getRequest$: Observable<PeriodicElement[]> = http.get<PeriodicElement[]>('/api/heroes');
   }
 }
