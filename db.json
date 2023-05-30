@@ -2,7 +2,6 @@
   "test": [
     { "id": 1, "body": "some comment", "nonce": 1 }
   ],
-  "profile": { "name": "typicode" },
   "periodicElements": [
     {"id": 1, "name": "Hydrogen", "weight": 1.0079, "symbol": "H", "clicked": false},
     {"id": 2, "name": "Helium", "weight": 4.0026, "symbol": "He", "clicked": false},

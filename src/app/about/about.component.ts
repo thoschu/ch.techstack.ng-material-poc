@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { clone } from 'ramda';
+import { noop, Observable, tap, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+import { AboutService } from './about.service';
 
 export interface PeriodicElement {
   name: string;
@@ -15,20 +20,25 @@ export interface PeriodicElement {
   styleUrls: ['./about.component.scss']
 })
 export class AboutComponent implements OnInit {
-  protected readonly dataSource: PeriodicElement[] = [
-    {id: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H', clicked: false},
-    {id: 2, name: 'Helium', weight: 4.0026, symbol: 'He', clicked: false},
-    {id: 3, name: 'Lithium', weight: 6.941, symbol: 'Li', clicked: false},
-    {id: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be', clicked: false},
-    {id: 5, name: 'Boron', weight: 10.811, symbol: 'B', clicked: false},
-    {id: 6, name: 'Carbon', weight: 12.0107, symbol: 'C', clicked: false},
-    {id: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N', clicked: false},
-    {id: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O', clicked: false},
-    {id: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F', clicked: false},
-    {id: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne', clicked: false},
-  ];
   protected readonly displayedColumns: string[] = ['id', 'name', 'weight', 'symbol', 'clicked'];
-  constructor(private readonly route: ActivatedRoute) {}
+  protected dataSource: PeriodicElement[] = [];
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly aboutService: AboutService
+  ) {
+    const periodicElements$: Observable<PeriodicElement[]> = aboutService.periodicElements$;
+
+    periodicElements$
+      .pipe(
+        tap((elements: PeriodicElement[]): void => {
+          this.dataSource = clone<PeriodicElement[]>(elements);
+        }),
+        catchError((error: Error) => {
+          console.error(error);
+          return throwError(() => error);
+        }))
+      .subscribe(noop);
+  }
 
   ngOnInit(): void {
     const { snapshot }: { snapshot: ActivatedRouteSnapshot } = this.route;
