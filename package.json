@@ -12,6 +12,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "server": "npx json-server --watch db.json",
+    "http-server": "npx http-server src/assets/vid/",
     "ngrok": "npx ngrok http 4200",
     "mkcert": "echo 'install mkcert like: brew install mkcert' && echo 'mkcert -install' && echo 'mkcert localhost' && exit 1"
   },

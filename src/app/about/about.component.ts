@@ -37,7 +37,7 @@ export class AboutComponent implements OnInit {
         }),
         catchError((error: Error) => {
           console.error(error); // https://rollbar.com/thoschu
-          return throwError(() => error);
+          return throwError((): Error => error);
         }),
         finalize((): boolean => this.loading = false),
       )
