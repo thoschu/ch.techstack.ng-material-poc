@@ -1,17 +1,48 @@
-<p>home works!!!</p>
-<!--<video controls preload>-->
-<!--  <source src="http://192.168.188.65:8080/video-1.mov" type="video/mp4">-->
-<!--  Dein Browser unterstützt das Videoformat nicht.-->
-<!--</video>-->
-<!--<hr>-->
-<!--<video controls>-->
-<!--  <source src="./assets/vid/video-2.mp4" type="video/mp4">-->
-<!--  Dein Browser unterstützt das Videoformat nicht.-->
-<!--</video>-->
-<input type="file" #fileInput accept="video/*" (change)="handleFile(video)">
-
-<hr>
-<video controls #video>
-  <source id="video-source" [src]="classReference.videoSrc" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<mat-card>
+  <mat-divider></mat-divider>
+  <mat-card-header>
+    <mat-card-title></mat-card-title>
+    <mat-card-subtitle></mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field style="width: 100%;">
+      <mat-label>File matInput</mat-label>
+      <button mat-icon-button matPrefix (click)="video_input.click()">
+        <mat-icon>attach_file</mat-icon>
+      </button>
+      <input type="text" readonly matInput>
+      <input
+        accept="video/mp4,video/x-m4v,video/x-flv,video/*"
+        type="file"
+        multiple
+        hidden
+        #video_input
+        (change)="transcode($event)"
+      >
+      <mat-error>this field is required</mat-error>
+    </mat-form-field>
+    <mat-progress-bar mode="determinate" [value]="progressBarValue" color="accent"></mat-progress-bar>
+    <br>
+    <button
+      [ngClass]="{'animate__animated animate__flash animate__slower animate__infinite': downloadActive}"
+      mat-mini-fab [disabled]="!downloadActive" aria-label="Icon button with a download icon"
+      (click)="downloadVideo()"
+    >
+      <mat-icon>download</mat-icon>
+    </button>
+    &nbsp;
+    <button
+      color="primary"
+      mat-mini-fab [disabled]="!downloadActive" aria-label="Icon button with a link icon"
+      (click)="openVideoList()"
+    >
+      <mat-icon>link</mat-icon>
+    </button>
+    <div class="video-container" style="--aspect-ratio: 3/7;">
+      <video #videoElement controls poster="assets/img/poster.gif">
+        <source id="video-source" [src]="classReference.videoSrc" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </mat-card-content>
+</mat-card>

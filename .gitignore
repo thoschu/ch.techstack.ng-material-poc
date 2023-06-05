@@ -43,3 +43,6 @@ Thumbs.db
 
 localhost-key.pem
 localhost.pem
+
+mock-server/videos/*
+mock-server/audios/*
