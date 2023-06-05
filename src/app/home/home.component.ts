@@ -1,8 +1,10 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
-import { nanoid } from 'nanoid'
-import { prop } from 'ramda';
+import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg} from '@ffmpeg/ffmpeg';
+import {nanoid} from 'nanoid'
+import {prop} from 'ramda';
+
+import {HomeService} from "./home.service";
 
 @Component({
   selector: 'app-home',
@@ -19,7 +21,8 @@ export class HomeComponent {
   @ViewChild('videoElement') private videoElement!: ElementRef;
   constructor(
     private readonly sanitizer: DomSanitizer,
-    private readonly renderer2: Renderer2
+    private readonly renderer2: Renderer2,
+    private readonly homeService: HomeService
   ) {}
 
   private getFirstFile(event: Event): File {
@@ -29,29 +32,35 @@ export class HomeComponent {
     return files!.item(0)!;
   }
 
+  private async convertToUint8Array(firstFile: File, name: string): Promise<Uint8Array> {
+    const options: CreateFFmpegOptions = {
+      log: true,
+      progress: (progressParams: { ratio: number }): void => {
+        this.progressBarValue = progressParams.ratio * 100;
+      }
+    };
+    const ffmpeg: FFmpeg = createFFmpeg(options);
+
+    await ffmpeg.load();
+
+    const dataUint8Array: Uint8Array = await fetchFile(firstFile);
+    const outputName: string = `${name}.mp4`;
+
+    ffmpeg.FS('writeFile', name, dataUint8Array);
+
+    await ffmpeg.run('-i', name, outputName);
+
+    return ffmpeg.FS('readFile', outputName);
+  }
+
   protected async transcode(event: Event): Promise<void> {
     const firstFile: File = this.getFirstFile(event);
     const { name, type }: { name: string, type: string } = firstFile;
 
     if(type !== 'video/mp4') {
-      const options: CreateFFmpegOptions = {
-        log: true,
-        progress: (progressParams: { ratio: number }): void => {
-          this.progressBarValue = progressParams.ratio * 100;
-        }
-      };
-      const ffmpeg: FFmpeg = createFFmpeg(options);
-
-      await ffmpeg.load();
-
-      const dataUint8Array: Uint8Array = await fetchFile(firstFile);
       const outputName: string = `${name}.mp4`;
+      const data: Uint8Array = await this.convertToUint8Array(firstFile, name);
 
-      ffmpeg.FS('writeFile', name, dataUint8Array);
-
-      await ffmpeg.run('-i', name, outputName);
-
-      const data: Uint8Array = ffmpeg.FS('readFile', outputName);
       const { buffer }: { buffer: ArrayBuffer } = data;
       const blobParts: BlobPart[] = [buffer];
       const blobOptions: BlobPropertyBag = { type: 'videos/mp4' };
