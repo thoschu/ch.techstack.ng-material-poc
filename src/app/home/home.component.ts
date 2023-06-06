@@ -1,10 +1,10 @@
-import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg} from '@ffmpeg/ffmpeg';
-import {nanoid} from 'nanoid'
-import {prop} from 'ramda';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
+import { nanoid } from 'nanoid'
+import { prop } from 'ramda';
 
-import {HomeService} from "./home.service";
+import { HomeService } from "./home.service";
 
 @Component({
   selector: 'app-home',
@@ -24,13 +24,6 @@ export class HomeComponent {
     private readonly renderer2: Renderer2,
     private readonly homeService: HomeService
   ) {}
-
-  private getFirstFile(event: Event): File {
-    const target: EventTarget | HTMLInputElement | null = event.target;
-    const { files }: { files:  FileList | null } = <HTMLInputElement>target;
-
-    return files!.item(0)!;
-  }
 
   private async convertToUint8Array(firstFile: File, name: string): Promise<Uint8Array> {
     const options: CreateFFmpegOptions = {
@@ -54,7 +47,7 @@ export class HomeComponent {
   }
 
   protected async transcode(event: Event): Promise<void> {
-    const firstFile: File = this.getFirstFile(event);
+    const firstFile: File = this.homeService.getFirstFile(event);
     const { name, type }: { name: string, type: string } = firstFile;
 
     if(type !== 'video/mp4') {
@@ -76,7 +69,7 @@ export class HomeComponent {
       const video: HTMLVideoElement = this.videoElement.nativeElement;
       video.load();
 
-      this.sendVideoToServer(file).then((result: boolean): void => {
+      this.homeService.sendVideoToServer(file).then((result: boolean): void => {
         if(result) {
           video.play();
 
@@ -103,7 +96,7 @@ export class HomeComponent {
         const options: FilePropertyBag = { type: firstFile.type };
         const file: File = new File([firstFile], `${nanoid()}.${firstFile.name}`, options);
 
-        this.sendVideoToServer(file)
+        this.homeService.sendVideoToServer(file)
           .then((result: boolean): void => {
             if (result) {
               video.play();
@@ -114,25 +107,12 @@ export class HomeComponent {
     }
   };
 
-  private sendVideoToServer(file: File): Promise<boolean> {
-    let formData: FormData = new FormData();
-
-    formData.append('video', file);
-
-    return fetch('http://localhost:3030/upload', {
-      method: 'POST',
-      body: formData
-    })
-      .then((response: Response): boolean => prop<boolean, 'ok', Response>('ok', response))
-      .catch(error => console.error(error)) as Promise<boolean>;
-  };
-
   protected downloadVideo(): void {
     this.downloadLink!.click();
   }
 
   protected openVideoList(): void {
-    const baseUrl: string = 'http://192.168.188.65:8080/';
+    const baseUrl: string = 'https://localhost:4200/videos';
     const url: URL = new URL(baseUrl);
 
     window.open(url);

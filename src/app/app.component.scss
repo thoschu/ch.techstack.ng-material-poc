@@ -1,4 +1,17 @@
 :host {
+
+  button {
+    z-index: 10000;
+  }
+
+  img#logo {
+    object-fit: scale-down;
+    height: inherit;
+    object-position: 100% 50%;
+    transform: translate(-80%, 0);
+
+  }
+
   .spacer {
     flex: 1 1 auto;
   }

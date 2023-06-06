@@ -15,12 +15,11 @@
     "changeOrigin": false
   },
   "/videos": {
-    "target": "http://192.168.188.65:8080/",
-    "secure": false,
-    "logLevel": "debug",
+    "target": "http://localhost:8080",
     "changeOrigin": true,
+    "secure": false,
     "pathRewrite": {
-      "^/videos": "/"
+      "videos": ""
     }
   }
 }

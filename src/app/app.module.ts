@@ -19,6 +19,7 @@ import { AboutComponent } from './about/about.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatInputModule} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
+import {NgOptimizedImage} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -26,24 +27,25 @@ import {MatCardModule} from "@angular/material/card";
     HomeComponent,
     AboutComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatListModule,
-    MatRadioModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    MatInputModule,
-    MatCardModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatListModule,
+        MatRadioModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatProgressSpinnerModule,
+        MatProgressBarModule,
+        MatInputModule,
+        MatCardModule,
+        NgOptimizedImage
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
