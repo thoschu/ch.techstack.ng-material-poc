@@ -1,11 +1,11 @@
-import { Component, ElementRef, Inject, Renderer2, ViewChild } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
-import { nanoid } from 'nanoid'
-// import { prop } from 'ramda';
+import {Component, ElementRef, Inject, Renderer2, ViewChild} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg} from '@ffmpeg/ffmpeg';
+import {nanoid} from 'nanoid'
+import {product} from 'ramda';
 
-import { HomeService } from "./home.service";
+import {HomeService} from "./home.service";
 
 @Component({
   selector: 'app-home',
@@ -31,7 +31,7 @@ export class HomeComponent {
     const options: CreateFFmpegOptions = {
       log: true,
       progress: (progressParams: { ratio: number }): void => {
-        this.progressBarValue = progressParams.ratio * 100;
+        this.progressBarValue = product([progressParams.ratio, 100]);
       }
     };
     const ffmpeg: FFmpeg = createFFmpeg(options);
