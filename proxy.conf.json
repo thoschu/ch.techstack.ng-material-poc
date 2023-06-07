@@ -14,12 +14,39 @@
     "logLevel": "debug",
     "changeOrigin": false
   },
-  "/videos": {
-    "target": "http://localhost:8080",
+  "/test/*": {
+    "target": "http://localhost:3000/",
     "changeOrigin": true,
     "secure": false,
+    "logLevel": "debug",
+    "headers": {},
     "pathRewrite": {
-      "videos": ""
+      "^/test": ""
+    }
+  },
+  "/style.css": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/script.js": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/db": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/videos": {
+    "target": "http://127.0.0.1:8080",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "debug",
+    "headers": {},
+    "pathRewrite": {
+      "^/videos": ""
     }
   }
 }
