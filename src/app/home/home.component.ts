@@ -1,8 +1,9 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Renderer2, ViewChild } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
 import { nanoid } from 'nanoid'
-import { prop } from 'ramda';
+// import { prop } from 'ramda';
 
 import { HomeService } from "./home.service";
 
@@ -22,7 +23,8 @@ export class HomeComponent {
   constructor(
     private readonly sanitizer: DomSanitizer,
     private readonly renderer2: Renderer2,
-    private readonly homeService: HomeService
+    private readonly homeService: HomeService,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   private async convertToUint8Array(firstFile: File, name: string): Promise<Uint8Array> {
@@ -112,9 +114,6 @@ export class HomeComponent {
   }
 
   protected openVideoList(): void {
-    const baseUrl: string = 'https://localhost:4200/videos';
-    const url: URL = new URL(baseUrl);
-
-    window.open(url);
+    document.location.href='/videos'
   }
 }
