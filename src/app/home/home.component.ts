@@ -1,31 +1,54 @@
-import {Component, ElementRef, Inject, Renderer2, ViewChild} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg} from '@ffmpeg/ffmpeg';
-import {nanoid} from 'nanoid'
-import {product} from 'ramda';
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
+import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
+import { nanoid } from 'nanoid'
+import { equals, product } from 'ramda';
 
-import {HomeService} from "./home.service";
+import { HomeService } from "./home.service";
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, AfterViewInit {
   private downloadLink: HTMLAnchorElement | null = null;
   protected downloadActive: boolean = false;
   protected progressBarValue: number = 0;
-  public static videoSrc: SafeUrl;
+  public static videoSrc: SafeUrl | null = null;
   public classReference: typeof HomeComponent = HomeComponent;
 
   @ViewChild('videoElement') private videoElement!: ElementRef;
   constructor(
     private readonly sanitizer: DomSanitizer,
     private readonly renderer2: Renderer2,
+    private readonly route: ActivatedRoute,
     private readonly homeService: HomeService,
     @Inject(DOCUMENT) private document: Document
   ) {}
+
+  ngOnInit() {
+    this.route.url.subscribe(([url]: UrlSegment[]): void => {
+      const { path }: { path: string } = url;
+      const trustedUrl: SafeUrl = this.sanitizer.bypassSecurityTrustUrl(`videos/${path}`);
+
+      HomeComponent.videoSrc = equals<string>(path, 'home') ? null : trustedUrl;
+    });
+  }
+
+  ngAfterViewInit() {
+    const video: HTMLVideoElement = this.videoElement.nativeElement;
+    video.muted = true;
+
+    video.play().then((): void => {
+      video.pause();
+      video.addEventListener('play', (event: Event): void => {
+        video.muted = !event.isTrusted;
+      });
+    }).catch((error: Error) => console.error(error));
+  }
 
   private async convertToUint8Array(firstFile: File, name: string): Promise<Uint8Array> {
     const options: CreateFFmpegOptions = {
