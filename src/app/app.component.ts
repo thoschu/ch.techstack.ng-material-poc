@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {FormControl} from "@angular/forms";
-import {MatDrawerMode} from "@angular/material/sidenav";
+import { FormControl } from '@angular/forms';
+import { MatDrawerMode } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',

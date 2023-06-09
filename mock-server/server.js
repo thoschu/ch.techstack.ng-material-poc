@@ -1,8 +1,13 @@
-const fs= require('fs');
-const express= require('express');
-const cors= require('cors');
-const multer= require('multer');
-const winston = require('winston'), expressWinston= require('express-winston');
+const fs= require('fs'),
+  express= require('express'),
+  cors= require('cors'),
+  multer= require('multer'),
+  winston = require('winston'),
+  expressWinston= require('express-winston'),
+  { Configuration, OpenAIApi } = require('openai'),
+  dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express().use(cors(), expressWinston.logger({
   transports: [
@@ -12,6 +17,7 @@ const app = express().use(cors(), expressWinston.logger({
     winston.format.colorize(),
     winston.format.json()
   ),
+  level: 'verbose',
   meta: true,
   msg: "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
   expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
@@ -35,7 +41,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.post('/upload', upload.single('video'), (req, res) => {
-
   try {
     if (!req.file) {
       return res.status(400).send('No videos file uploaded.');
@@ -47,6 +52,34 @@ app.post('/upload', upload.single('video'), (req, res) => {
   }
 });
 
+app.get('/', async (req, res) => {
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+    organization: 'org-WaBrLoSA1kjTGKk2MiV6nIpD'
+  });
+  const openai = new OpenAIApi(configuration);
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: "Say this is a test",
+    temperature: 0,
+    max_tokens: 7,
+  });
+
+  const response2 = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: "Human: Hello, who are you?",
+    temperature: 0.9,
+    max_tokens: 150,
+    top_p: 1,
+    frequency_penalty: 0.0,
+    presence_penalty: 0.6,
+    stop: [" Human:", " AI:"],
+  });
+
+  console.log(response2.data);
+  res.send(JSON.stringify(response.data, null, 4));
+})
+
 app.listen(3030, () => {
-  console.info('Server is running on port 3030');
+  console.info('Server is running on http://localhost:3030');
 });

@@ -42,12 +42,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const video: HTMLVideoElement = this.videoElement.nativeElement;
     video.muted = true;
 
-    video.play().then((): void => {
-      video.pause();
-      video.addEventListener('play', (event: Event): void => {
-        video.muted = !event.isTrusted;
-      });
-    }).catch((error: Error) => console.error(error));
+    const videoPlayPromise: Promise<void> = video.play();
+
+    videoPlayPromise
+      .then((): void => {
+        video.pause();
+        video.addEventListener('play', (event: Event): void => {
+          video.muted = !event.isTrusted;
+        });
+      })
+      .catch((error: Error) => console.error(error));
   }
 
   private async convertToUint8Array(firstFile: File, name: string): Promise<Uint8Array> {
