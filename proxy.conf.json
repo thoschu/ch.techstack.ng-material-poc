@@ -48,5 +48,11 @@
     "pathRewrite": {
       "^/videos": ""
     }
+  },
+  "/sock": {
+    "target": "http://localhost:3030",
+    "ws": true,
+    "logLevel": "debug",
+    "changeOrigin": true
   }
 }

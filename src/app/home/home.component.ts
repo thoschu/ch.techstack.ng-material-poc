@@ -1,12 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
-import { nanoid } from 'nanoid'
-import { equals, product } from 'ramda';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {ActivatedRoute, UrlSegment} from '@angular/router';
+import {createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg} from '@ffmpeg/ffmpeg';
+import {nanoid} from 'nanoid'
+import {equals, product} from 'ramda';
+import {io, Socket} from 'socket.io-client';
 
-import { HomeService } from "./home.service";
+import {HomeService} from "./home.service";
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public classReference: typeof HomeComponent = HomeComponent;
 
   @ViewChild('videoElement') private videoElement!: ElementRef;
+  @ViewChild('webRtcElementLocal') private webRtcElementLocal!: ElementRef;
+  @ViewChild('webRtcElementRemote') private webRtcElementRemote!: ElementRef;
+
   constructor(
     private readonly sanitizer: DomSanitizer,
     private readonly renderer2: Renderer2,
@@ -40,6 +44,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     const video: HTMLVideoElement = this.videoElement.nativeElement;
+    const socket: Socket = io('http://localhost:3030');
     video.muted = true;
 
     const videoPlayPromise: Promise<void> = video.play();
@@ -52,9 +57,73 @@ export class HomeComponent implements OnInit, AfterViewInit {
         });
       })
       .catch((error: Error) => console.error(error));
+
+    // WebRTC-Signalisierung - Angebot senden
+    const peerConnection: RTCPeerConnection = new RTCPeerConnection();
+    const room: string = 'mov-room';
+
+    // Verbindungsherstellung mit dem Socket.io-Server
+    socket.on('connect',(): void => {
+      console.log('Verbunden mit dem Server:', io.name);
+
+      this.document.defaultView!
+        .navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream: MediaStream): void => {
+          const user: string = nanoid();
+          this.webRtcElementLocal.nativeElement.srcObject = stream;
+
+          stream.getTracks()
+            .forEach((track: MediaStreamTrack): RTCRtpSender => peerConnection.addTrack(track, stream));
+
+          socket.emit('join', { room, user }); // Raum beitreten
+
+          peerConnection.addEventListener('negotiationneeded',async (event: Event): Promise<void> => {
+            const offer: RTCSessionDescriptionInit = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            socket.emit('offer', { room, offer });
+          });
+
+          peerConnection.addEventListener(
+            'track',
+            (event: RTCTrackEvent): void => {
+              console.log('#peerConnection.ontrack');
+              this.webRtcElementRemote.nativeElement.srcObject = event.streams[0];
+            },
+            false
+          );
+
+          peerConnection.addEventListener('icecandidate', (event: RTCPeerConnectionIceEvent): void => {
+            const { candidate }: { candidate: RTCIceCandidate | null } = event;
+            if (candidate) {
+              socket.emit('iceCandidate', { room, candidate });
+            }
+          });
+        })
+        .catch((error: Error): void => {
+          console.error(`Fehler bei der Stream-Einrichtung: ${error}`);
+        });
+    });
+
+    socket.on('offer', async (offer: RTCSessionDescriptionInit): Promise<void> => {
+      await peerConnection.setRemoteDescription(offer);
+
+      const answer: RTCSessionDescriptionInit = await peerConnection.createAnswer();
+      await peerConnection.setLocalDescription(answer);
+
+      socket.emit('answer', { room, answer });
+    });
+
+    socket.on('answer', async (answer: RTCSessionDescriptionInit): Promise<void> => {
+      await peerConnection.setRemoteDescription(answer);
+    });
+
+    socket.on('iceCandidate', async (candidate): Promise<void> => {
+      await peerConnection.addIceCandidate(candidate);
+    });
   }
 
-  private async convertToUint8Array(firstFile: File, name: string): Promise<Uint8Array> {
+  private async convertToUint8ArrayWithFfmpeg(firstFile: File, name: string): Promise<Uint8Array> {
     const options: CreateFFmpegOptions = {
       log: true,
       progress: (progressParams: { ratio: number }): void => {
@@ -81,7 +150,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     if(type !== 'video/mp4') {
       const outputName: string = `${name}.mp4`;
-      const data: Uint8Array = await this.convertToUint8Array(firstFile, name);
+      const data: Uint8Array = await this.convertToUint8ArrayWithFfmpeg(firstFile, name);
 
       const { buffer }: { buffer: ArrayBuffer } = data;
       const blobParts: BlobPart[] = [buffer];
@@ -107,6 +176,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.renderer2.setAttribute(this.downloadLink, 'download', fileName);
 
           this.downloadActive = true;
+
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
+              console.log("Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude);
+            });
+          } else {
+            alert("Geolocation is not supported by this browser.");
+          }
         }
       });
 
