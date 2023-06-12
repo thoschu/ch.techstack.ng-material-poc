@@ -16,6 +16,7 @@
     "mock-server": "nodemon mock-server/server.js",
     "ngrok": "npx ngrok http --host-header=rewrite 4200",
     "ngrok:ssl": "npx ngrok http --host-header=rewrite https://localhost:4200",
+    "ngrok:socket.io": "npx ngrok http 3030",
     "clean:videos": "npx rimraf mock-server/videos/*",
     "mkcert": "echo 'install mkcert like: brew install mkcert' && echo 'mkcert -install' && echo 'mkcert localhost' && exit 1"
   },

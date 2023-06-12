@@ -1,13 +1,13 @@
-import {AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {ActivatedRoute, UrlSegment} from '@angular/router';
-import {createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg} from '@ffmpeg/ffmpeg';
-import {nanoid} from 'nanoid'
-import {equals, product} from 'ramda';
-import {io, Socket} from 'socket.io-client';
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
+import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
+import { nanoid } from 'nanoid'
+import { equals, product } from 'ramda';
+import { io, Socket } from 'socket.io-client';
 
-import {HomeService} from "./home.service";
+import { HomeService } from "./home.service";
 
 @Component({
   selector: 'app-home',
@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('videoElement') private videoElement!: ElementRef;
   @ViewChild('webRtcElementLocal') private webRtcElementLocal!: ElementRef;
   @ViewChild('webRtcElementRemote') private webRtcElementRemote!: ElementRef;
+  @ViewChild('webRtcElementContainer') private webRtcElementContainer!: ElementRef;
 
   constructor(
     private readonly sanitizer: DomSanitizer,
@@ -42,9 +43,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
     const video: HTMLVideoElement = this.videoElement.nativeElement;
-    const socket: Socket = io('http://localhost:3030');
+    const socket: Socket = io('https://aa92-77-20-121-222.ngrok-free.app');
     video.muted = true;
 
     const videoPlayPromise: Promise<void> = video.play();
@@ -60,15 +61,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     // WebRTC-Signalisierung - Angebot senden
     const peerConnection: RTCPeerConnection = new RTCPeerConnection();
+    //const peerConnectionDataChannel: RTCDataChannel = peerConnection.createDataChannel("channel-one");
     const room: string = 'mov-room';
 
     // Verbindungsherstellung mit dem Socket.io-Server
-    socket.on('connect',(): void => {
+    socket.on('connect', (): void => {
       console.log('Verbunden mit dem Server:', io.name);
 
       this.document.defaultView!
         .navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
+        .getUserMedia({video: true, audio: true})
         .then((stream: MediaStream): void => {
           const user: string = nanoid();
           this.webRtcElementLocal.nativeElement.srcObject = stream;
@@ -76,27 +78,38 @@ export class HomeComponent implements OnInit, AfterViewInit {
           stream.getTracks()
             .forEach((track: MediaStreamTrack): RTCRtpSender => peerConnection.addTrack(track, stream));
 
-          socket.emit('join', { room, user }); // Raum beitreten
+          socket.emit('join', {room, user}); // Raum beitreten
 
-          peerConnection.addEventListener('negotiationneeded',async (event: Event): Promise<void> => {
+          peerConnection.addEventListener('negotiationneeded', async (event: Event): Promise<void> => {
             const offer: RTCSessionDescriptionInit = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
-            socket.emit('offer', { room, offer });
+            socket.emit('offer', {room, offer});
           });
 
           peerConnection.addEventListener(
             'track',
             (event: RTCTrackEvent): void => {
               console.log('#peerConnection.ontrack');
+              console.dir(event);
+
+              event.streams.forEach((stream: MediaStream): void => {
+                const video: HTMLVideoElement = this.renderer2.createElement('video');
+                this.renderer2.setAttribute(video, 'muted', 'true');
+                this.renderer2.setAttribute(video, 'autoplay', 'true');
+                this.renderer2.setProperty(video, 'srcObject', stream);
+                // this.renderer2.appendChild(this.webRtcElementContainer.nativeElement, video);
+              });
+
               this.webRtcElementRemote.nativeElement.srcObject = event.streams[0];
             },
             false
           );
 
           peerConnection.addEventListener('icecandidate', (event: RTCPeerConnectionIceEvent): void => {
-            const { candidate }: { candidate: RTCIceCandidate | null } = event;
+            const {candidate}: { candidate: RTCIceCandidate | null } = event;
+
             if (candidate) {
-              socket.emit('iceCandidate', { room, candidate });
+              socket.emit('iceCandidate', {room, candidate});
             }
           });
         })
@@ -111,7 +124,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       const answer: RTCSessionDescriptionInit = await peerConnection.createAnswer();
       await peerConnection.setLocalDescription(answer);
 
-      socket.emit('answer', { room, answer });
+      socket.emit('answer', {room, answer});
     });
 
     socket.on('answer', async (answer: RTCSessionDescriptionInit): Promise<void> => {

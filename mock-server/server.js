@@ -1,6 +1,6 @@
-const fs= require('fs'),
+const fs= require('node:fs'),
   express= require('express'),
-  http = require('http');
+  http = require('node:http');
   socketIO = require('socket.io'),
   cors= require('cors'),
   multer= require('multer'),
@@ -9,27 +9,47 @@ const fs= require('fs'),
   { Configuration, OpenAIApi } = require('openai'),
   dotenv = require('dotenv');
 
+const cluster = require('node:cluster');
+const numCPUs = require('node:os').availableParallelism();
+const process = require('node:process');
+
 dotenv.config();
+
+// https://socket.io/docs/v4/cluster-adapter/
+// if (cluster.isPrimary) {
+//   console.log(`Primary ${process.pid} is running`);
+//
+//   // Fork workers.
+//   for (let i = 0; i < numCPUs; i++) {
+//     cluster.fork();
+//   }
+//
+//   cluster.on('exit', (worker, code, signal) => {
+//     console.log(`worker ${worker.process.pid} died`);
+//   });
+// } else {
+//   console.log(`Worker ${process.pid} started`);
+// }
 
 const app = express();
 
 app.use(cors());
 
-// app.use(expressWinston.logger({
-//   transports: [
-//     new winston.transports.Console()
-//   ],
-//   format: winston.format.combine(
-//     winston.format.colorize(),
-//     winston.format.json()
-//   ),
-//   level: 'verbose',
-//   meta: true,
-//   msg: "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
-//   expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
-//   colorize: true, // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
-//   // ignoreRoute: (req, res) => { return false; } // optional: allows to skip some log messages based on request and/or response
-// }));
+app.use(expressWinston.logger({
+  transports: [
+    new winston.transports.Console()
+  ],
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.json()
+  ),
+  level: 'verbose',
+  meta: true,
+  msg: "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
+  expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
+  colorize: true, // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
+  // ignoreRoute: (req, res) => { return false; } // optional: allows to skip some log messages based on request and/or response
+}));
 
 const server = http.createServer(app);
 const io = socketIO(server, {
@@ -126,8 +146,8 @@ io.on('connection', socket => {
   });
 });
 
+const port = 3030;
 
-server.listen(3030, () => {
-  const port = 3030;
+server.listen(port, () => {
   console.info(`Server is running on http://localhost:${port}`);
 });
