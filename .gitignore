@@ -46,3 +46,4 @@ localhost.pem
 
 mock-server/videos/*
 mock-server/audios/*
+.env
