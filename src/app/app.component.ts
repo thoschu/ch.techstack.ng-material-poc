@@ -8,6 +8,6 @@ import { MatDrawerMode } from '@angular/material/sidenav';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  protected title: string = 'ng-material-poc';
+  public title: string = 'ng-material-poc';
   mode: FormControl<'over' | 'push' | 'side' | null> = new FormControl('side' as MatDrawerMode);
 }

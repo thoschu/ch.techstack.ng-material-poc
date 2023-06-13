@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     const video: HTMLVideoElement = this.videoElement.nativeElement;
-    const socket: Socket = io('https://aa92-77-20-121-222.ngrok-free.app');
+    const socket: Socket = io('http://localhost:3030');
     video.muted = true;
 
     const videoPlayPromise: Promise<void> = video.play();

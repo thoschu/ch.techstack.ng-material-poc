@@ -15,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,7 +45,8 @@ import { AboutComponent } from './about/about.component';
         MatProgressBarModule,
         MatInputModule,
         MatCardModule,
-        NgOptimizedImage
+        NgOptimizedImage,
+        MatExpansionModule
     ],
   providers: [],
   bootstrap: [AppComponent]

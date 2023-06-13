@@ -44,10 +44,22 @@
         Your browser does not support the video tag.
       </video>
     </div>
-    <hr>
-    <div #webRtcElementContainer class="webrtc-container" style="text-align:center">
-      <video style="border: 1px red solid" #webRtcElementLocal autoplay muted></video>
-      <video style="border: 1px blue solid" #webRtcElementRemote autoplay></video>
-    </div>
+    <mat-divider></mat-divider>
+    <mat-accordion>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            WebRTC
+          </mat-panel-title>
+          <mat-panel-description>
+            Please click to expand...
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div #webRtcElementContainer class="webrtc-container" style="text-align:center">
+          <video style="border: 1px red solid" #webRtcElementLocal autoplay muted></video>
+          <video style="border: 1px blue solid" #webRtcElementRemote autoplay></video>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
   </mat-card-content>
 </mat-card>
