@@ -109,7 +109,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             const {candidate}: { candidate: RTCIceCandidate | null } = event;
 
             if (candidate) {
-              socket.emit('iceCandidate', {room, candidate});
+              socket.emit('iceCandidate', { room, candidate });
             }
           });
         })
@@ -171,9 +171,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       const blob: Blob = new Blob(blobParts, blobOptions);
       const fileName: string = `${nanoid()}.${outputName}`;
 
-      const file: File = new File([buffer], fileName, {
-        type: 'videos/mp4'
-      });
+      const file: File = new File([buffer], fileName, { type: 'videos/mp4' });
       const dangerousUrl: string = URL.createObjectURL(blob);
       HomeComponent.videoSrc = this.sanitizer.bypassSecurityTrustUrl(dangerousUrl);
 
