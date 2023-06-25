@@ -56,8 +56,8 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div #webRtcElementContainer class="webrtc-container" style="text-align:center">
-          <video style="border: 1px red solid" #webRtcElementLocal autoplay muted></video>
-          <video style="border: 1px blue solid" #webRtcElementRemote autoplay></video>
+          <video style="border: 1px red solid" #webRtcElementLocal [autoplay]="'autoplay'" [muted]="'muted'"></video>
+<!--          <video style="border: 1px blue solid" #webRtcElementRemote [autoplay]="'autoplay'"></video>-->
         </div>
       </mat-expansion-panel>
     </mat-accordion>

@@ -4,7 +4,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
 import { nanoid } from 'nanoid'
-import { equals, product } from 'ramda';
+import { equals, product, slice } from 'ramda';
 import { io, Socket } from 'socket.io-client';
 
 import { HomeService } from "./home.service";
@@ -15,6 +15,7 @@ import { HomeService } from "./home.service";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+  private readonly remoteMediaStreams: Set<MediaStream> = new Set<MediaStream>();
   private downloadLink: HTMLAnchorElement | null = null;
   protected downloadActive: boolean = false;
   protected progressBarValue: number = 0;
@@ -23,7 +24,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   @ViewChild('videoElement') private videoElement!: ElementRef;
   @ViewChild('webRtcElementLocal') private webRtcElementLocal!: ElementRef;
-  @ViewChild('webRtcElementRemote') private webRtcElementRemote!: ElementRef;
+  // @ViewChild('webRtcElementRemote') private webRtcElementRemote!: ElementRef;
   @ViewChild('webRtcElementContainer') private webRtcElementContainer!: ElementRef;
 
   constructor(
@@ -73,45 +74,113 @@ export class HomeComponent implements OnInit, AfterViewInit {
         .getUserMedia({video: true, audio: true})
         .then((stream: MediaStream): void => {
           const user: string = nanoid();
+          this.renderer2.setProperty(this.webRtcElementLocal.nativeElement, 'id', stream.id);
           this.webRtcElementLocal.nativeElement.srcObject = stream;
 
-          stream.getTracks()
-            .forEach((track: MediaStreamTrack): RTCRtpSender => peerConnection.addTrack(track, stream));
+          console.info(`Local: ${stream.id}`);
 
-          socket.emit('join', {room, user}); // Raum beitreten
+          stream.getTracks().forEach((track: MediaStreamTrack): RTCRtpSender => peerConnection.addTrack(track, stream));
+
+          socket.emit('join', { room, user }); // Raum beitreten
 
           peerConnection.addEventListener('negotiationneeded', async (event: Event): Promise<void> => {
             const offer: RTCSessionDescriptionInit = await peerConnection.createOffer();
             await peerConnection.setLocalDescription(offer);
-            socket.emit('offer', {room, offer});
+            socket.emit('offer', { room, offer });
           });
 
           peerConnection.addEventListener(
             'track',
             (event: RTCTrackEvent): void => {
-              console.log('#peerConnection.ontrack');
-              console.dir(event);
+              console.info(`#peerConnection.ontrack`);
+              const { streams }: { streams: ReadonlyArray<MediaStream> } = event;
+              const firstStream: MediaStream = streams[0];
+              const { id }: { id: string } = firstStream;
+              const pureId: string = slice(1, -1, id);
 
-              event.streams.forEach((stream: MediaStream): void => {
-                const video: HTMLVideoElement = this.renderer2.createElement('video');
-                this.renderer2.setAttribute(video, 'muted', 'true');
-                this.renderer2.setAttribute(video, 'autoplay', 'true');
-                this.renderer2.setProperty(video, 'srcObject', stream);
-                // this.renderer2.appendChild(this.webRtcElementContainer.nativeElement, video);
+              event.streams.forEach((mediaStream: MediaStream): void => {
+                const { id }:{ id: string } = mediaStream;
+                const pureId: string = slice(1, -1, id);
+                console.log(pureId);
+                console.log('--------------------xxx-----------------');
+
+                const alreadyInDom: boolean = this.checkVideoElementsInContainer(pureId);
+                console.log(this.checkVideoElementsInContainer(pureId));
+                if (!alreadyInDom) {
+                  const { nativeElement: webRtcElementContainerElement }: { nativeElement: HTMLDivElement } = this.webRtcElementContainer;
+                  const videoTag: HTMLVideoElement = this.renderer2.createElement('video');
+
+                  this.renderer2.setAttribute(videoTag, 'autoplay', 'autoplay');
+                  this.renderer2.setProperty(videoTag, 'id', pureId);
+                  this.renderer2.setProperty(videoTag, 'srcObject', mediaStream);
+                  this.renderer2.appendChild(webRtcElementContainerElement, videoTag);
+                }
               });
 
-              this.webRtcElementRemote.nativeElement.srcObject = event.streams[0];
             },
             false
           );
 
           peerConnection.addEventListener('icecandidate', (event: RTCPeerConnectionIceEvent): void => {
-            const {candidate}: { candidate: RTCIceCandidate | null } = event;
+            const { candidate }: { candidate: RTCIceCandidate | null } = event;
 
             if (candidate) {
               socket.emit('iceCandidate', { room, candidate });
             }
           });
+
+          peerConnection.addEventListener(
+            "connectionstatechange",
+            (event) => {
+              console.log(event);
+              console.log(peerConnection);
+              const { connectionState }:{ connectionState: RTCPeerConnectionState } = peerConnection;
+              console.log(connectionState);
+              // console.log(peerConnection.connectionId);
+
+              let remoteDescription = peerConnection.remoteDescription;
+
+              // Extrahieren Sie die ID aus dem SDP
+              // let id = extractIDFromSDP(remoteDescription!.sdp);
+
+              console.log(remoteDescription);
+
+
+
+              switch (connectionState) {
+                case "new":
+                  break;
+                case "connecting":
+                  break;
+                case "connected":
+                  break;
+                case "disconnected":
+                  console.log(remoteDescription!.sdp);
+                  // a=msid-semantic: WMS {b89a1248-058c-4ec5-b434-f149956279cb}
+                  function extractIDFromSDP(sdp: string) {
+                    let idStartIndex = sdp.indexOf("{") + 1;
+                    let idEndIndex = sdp.indexOf("}", idStartIndex);
+
+                    // Extrahieren Sie die ID
+                    let id = sdp.substring(idStartIndex, idEndIndex);
+
+                    return id;
+                  }
+
+                  console.log(extractIDFromSDP(remoteDescription!.sdp));
+
+                  // todo
+                  break;
+                case "closed":
+                  break;
+                case "failed":
+                  break;
+                default:
+                  break;
+              }
+            },
+            false
+          );
         })
         .catch((error: Error): void => {
           console.error(`Fehler bei der Stream-Einrichtung: ${error}`);
@@ -230,5 +299,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   protected openVideoList(): void {
     document.location.href='/videos'
+  }
+
+  private checkVideoElementsInContainer(targetId: string): boolean {
+    const { nativeElement: webRtcElementContainerElement }: { nativeElement: HTMLDivElement } = this.webRtcElementContainer;
+
+    if (webRtcElementContainerElement) {
+      const videoElements: HTMLCollectionOf<HTMLVideoElement> = webRtcElementContainerElement.getElementsByTagName('video');
+      const { length: videoElementsLength }: { length: number } = videoElements;
+
+      for (let i: number = 0; i < videoElementsLength; i++) {
+        if (videoElements[i].id === targetId) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }
