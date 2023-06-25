@@ -46,7 +46,7 @@
     </div>
     <mat-divider></mat-divider>
     <mat-accordion>
-      <mat-expansion-panel hideToggle>
+      <mat-expansion-panel hideToggle expanded>
         <mat-expansion-panel-header>
           <mat-panel-title>
             WebRTC
@@ -56,7 +56,7 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div #webRtcElementContainer class="webrtc-container" style="text-align:center">
-          <video style="border: 1px red solid" #webRtcElementLocal [autoplay]="'autoplay'" [muted]="'muted'"></video>
+          <video class="animate__animated animate__bounce" style="border: 1px red solid" #webRtcElementLocal [autoplay]="'autoplay'" [muted]="'muted'"></video>
 <!--          <video style="border: 1px blue solid" #webRtcElementRemote [autoplay]="'autoplay'"></video>-->
         </div>
       </mat-expansion-panel>

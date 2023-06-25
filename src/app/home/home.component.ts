@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
-import { nanoid } from 'nanoid'
-import { equals, product, slice } from 'ramda';
-import { io, Socket } from 'socket.io-client';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {ActivatedRoute, UrlSegment} from '@angular/router';
+import {createFFmpeg, CreateFFmpegOptions, fetchFile, FFmpeg} from '@ffmpeg/ffmpeg';
+import {nanoid} from 'nanoid'
+import {equals, product, slice} from 'ramda';
+import {io, Socket} from 'socket.io-client';
 
-import { HomeService } from "./home.service";
+import {HomeService} from "./home.service";
 
 @Component({
   selector: 'app-home',
@@ -101,9 +101,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
               event.streams.forEach((mediaStream: MediaStream): void => {
                 const { id }:{ id: string } = mediaStream;
                 const pureId: string = slice(1, -1, id);
-                console.log(pureId);
-                console.log('--------------------xxx-----------------');
-
                 const alreadyInDom: boolean = this.checkVideoElementsInContainer(pureId);
                 console.log(this.checkVideoElementsInContainer(pureId));
                 if (!alreadyInDom) {
@@ -131,49 +128,56 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
           peerConnection.addEventListener(
             "connectionstatechange",
-            (event) => {
+            (event: Event): void => {
               console.log(event);
-              console.log(peerConnection);
-              const { connectionState }:{ connectionState: RTCPeerConnectionState } = peerConnection;
-              console.log(connectionState);
-              // console.log(peerConnection.connectionId);
-
-              let remoteDescription = peerConnection.remoteDescription;
-
-              // Extrahieren Sie die ID aus dem SDP
-              // let id = extractIDFromSDP(remoteDescription!.sdp);
-
-              console.log(remoteDescription);
-
-
+              const { connectionState }: { connectionState: RTCPeerConnectionState } = peerConnection;
+              const { remoteDescription }: { remoteDescription: RTCSessionDescription | null } = peerConnection;
 
               switch (connectionState) {
                 case "new":
+                  console.log(connectionState);
                   break;
                 case "connecting":
+                  console.log(connectionState);
                   break;
                 case "connected":
+                  console.log(connectionState);
                   break;
                 case "disconnected":
-                  console.log(remoteDescription!.sdp);
-                  // a=msid-semantic: WMS {b89a1248-058c-4ec5-b434-f149956279cb}
-                  function extractIDFromSDP(sdp: string) {
-                    let idStartIndex = sdp.indexOf("{") + 1;
-                    let idEndIndex = sdp.indexOf("}", idStartIndex);
+                  console.log(connectionState);
+                  const extractIDFromSDP = (sdp: string): string => {
+                    let idStartIndex: number = sdp.indexOf("{") + 1;
+                    let idEndIndex: number = sdp.indexOf("}", idStartIndex);
 
-                    // Extrahieren Sie die ID
-                    let id = sdp.substring(idStartIndex, idEndIndex);
-
-                    return id;
+                    return sdp.substring(idStartIndex, idEndIndex);
                   }
 
-                  console.log(extractIDFromSDP(remoteDescription!.sdp));
+                  const disId: string = extractIDFromSDP(remoteDescription!.sdp);
+                  const { nativeElement: webRtcElementContainerElement }: { nativeElement: HTMLDivElement } = this.webRtcElementContainer;
+                  const children: HTMLCollectionOf<HTMLVideoElement> = webRtcElementContainerElement.getElementsByTagName('video');
+                  const videoTag: HTMLVideoElement | null = children.namedItem(`${disId}`);
 
-                  // todo
+                  if (videoTag) {
+                    this.renderer2.setAttribute(videoTag, 'muted', 'muted');
+                    this.renderer2.setProperty(videoTag, 'srcObject', null);
+                    // this.renderer2.addClass(videoTag, 'animate__animated');
+                    // this.renderer2.addClass(videoTag, 'animate__bounceOut');
+                    this.renderer2.setAttribute(videoTag, 'class','animate__animated animate__bounceOut');
+                    setTimeout(() => {
+                        this.renderer2.removeChild(webRtcElementContainerElement, videoTag);
+                      },
+                      3000
+                    );
+
+                  } else {
+                    console.log('Element nicht gefunden');
+                  }
                   break;
                 case "closed":
+                  console.log(connectionState);
                   break;
                 case "failed":
+                  console.log(connectionState);
                   break;
                 default:
                   break;
