@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   protected title: string = 'ng-material-poc';
+  protected isOn: boolean = true;
+
+  protected onOff(): void {
+    this.isOn = !this.isOn;
+  }
 }
