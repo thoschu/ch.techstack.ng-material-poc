@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { reducers, metaReducers, State } from './reducers';
 import { MamaComponent } from './mama/mama.component';
 import * as fromMama from './mama/reducers';
+import { UserGuard } from './user/user.guard';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import * as fromMama from './mama/reducers';
     StoreModule.forFeature(fromMama.mamaFeatureKey, fromMama.reducers, { metaReducers: fromMama.metaReducers }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
-  providers: [],
+  providers: [UserGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
