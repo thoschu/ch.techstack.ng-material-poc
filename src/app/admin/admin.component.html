@@ -1,1 +1,6 @@
-<p>admin works!</p>
+<!--<h3 [ngClass]="{'male': isMale, 'female' : !isMale }">{{ admin$ | async }}</h3>-->
+<h3 class="male" *ngIf="isMale; else female">{{ admin$ | async }}</h3>
+
+<ng-template #female>
+  <h3 class="female">{{ admin$ | async }}</h3>
+</ng-template>

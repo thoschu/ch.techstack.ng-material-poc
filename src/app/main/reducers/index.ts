@@ -9,13 +9,8 @@ import {
 
 export const mainFeatureKey = 'main';
 
-export interface State {
+export interface State { }
 
-}
-
-export const reducers: ActionReducerMap<State> = {
-
-};
-
+export const reducers: ActionReducerMap<State> = { };
 
 export const metaReducers: MetaReducer<State>[] = isDevMode() ? [] : [];

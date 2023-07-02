@@ -26,14 +26,18 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
-## [@ngrx ](https://v8.ngrx.io/)
+## Other´s
+
+### [@ngrx ](https://v8.ngrx.io/)
 
 >> ```ng add @ngrx/store --minimal=false```
->
->> ```ng add @ngrx/store-devtools``` 
->
->> ```ng add @ngrx/schematics```
->>
->> ```ng generate store admin/Admin -m admin.module.ts```
-> 
 
+>> ```ng add @ngrx/store-devtools``` 
+
+>> ```ng add @ngrx/schematics```
+>
+>> ```ng generate store admin/Admin -m admin.module.ts```
+>> ```ng generate action app```
+>> ```ng generate action Main --flat false```
+>> ```ng generate reducer ReducerName [options]```
+>> ```ng generate selector selectorName --flat false --skip-tests true```

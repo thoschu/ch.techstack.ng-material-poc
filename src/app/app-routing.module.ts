@@ -3,6 +3,7 @@ import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 
 import { UserComponent } from './user/user.component';
 import { AdminComponent } from './admin/admin.component';
+import { MamaComponent } from "./mama/mama.component";
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ export class AppRoutingModule {
   private static readonly CONFIG: ExtraOptions = { useHash: false };
   private static readonly ROUTES: Routes = [
     { path: 'user', component: UserComponent },
+    { path: 'mama', component: MamaComponent },
     { path: 'admin', component: AdminComponent }, // eagerly loaded
     { path: 'main', loadChildren: () => import('./main/main.module').then(m => m.MainModule) }, // lazy loaded
     { path: '**', redirectTo: 'user' }
