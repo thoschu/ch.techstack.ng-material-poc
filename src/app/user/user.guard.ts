@@ -4,9 +4,9 @@ import { select, Store} from '@ngrx/store';
 import { map, Observable } from 'rxjs';
 
 import { State } from '../reducers';
-import {userSelector} from '../mama/mama.selectors';
+import { userSelector } from '../mama/mama.selectors';
 
-export const userGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const userGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> => {
   const store: Store<State> = inject<Store<State>>(Store);
 
   return store
