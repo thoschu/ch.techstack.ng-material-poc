@@ -4,7 +4,7 @@ import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './user/user.component';
 import { AdminComponent } from './admin/admin.component';
 import { MamaComponent } from './mama/mama.component';
-import { UserGuard, userGuard } from './user/user.guard';
+import { /*UserGuard,*/ userGuard, userGuardAlwaysTrue } from './user/user.guard';
 
 @NgModule({
   imports: [
@@ -18,7 +18,7 @@ export class AppRoutingModule {
     {
       path: 'user',
       component: UserComponent,
-      canActivate: [userGuard]
+      canActivate: [userGuard, userGuardAlwaysTrue]
     },
     { path: 'mama', component: MamaComponent },
     { path: 'admin', component: AdminComponent }, // eagerly loaded

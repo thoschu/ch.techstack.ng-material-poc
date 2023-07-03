@@ -41,3 +41,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 >> ```ng generate action Main --flat false```
 >> ```ng generate reducer ReducerName [options]```
 >> ```ng generate selector selectorName --flat false --skip-tests true```
+
+ng add @ngrx/effects@latest 
+ng generate effect adminAdmin --minimal=false --dry-run
+ng generate effect admin/Admin -m admin/admin.module.ts

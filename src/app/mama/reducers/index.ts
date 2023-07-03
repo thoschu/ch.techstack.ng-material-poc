@@ -22,11 +22,11 @@ export const initialMamaState: MamaState = {
 
 export const reducers: ActionReducer<MamaState> = createReducer(
   initialMamaState,
-  on(mamaActions.loadMamas,
+  on(mamaActions.loadMamasDelete,
     (state: MamaState) => {
       console.log(state);
 
-      return state;
+      return { mama: '...' };
     }
   ),
   on(mamaActions.loadMamasSuccess,

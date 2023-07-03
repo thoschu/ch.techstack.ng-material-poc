@@ -16,7 +16,7 @@ export const setAdminActionCreator: ActionCreator<'[Admin Page] SetAdmin Action'
   props<{ admin: Admin<number> }>()
 );
 
-export const adminActions: ActionGroup<'Admin Page', {"DeleteAdmin Action": ActionCreatorProps<void>, "SetAdmin Action": ActionCreatorProps<{admin: Admin<number>}>}> = createActionGroup({
+export const adminActions: ActionGroup<'Admin Page', {'DeleteAdmin Action': ActionCreatorProps<void>, 'SetAdmin Action': ActionCreatorProps<{ admin: Admin<number> }>}> = createActionGroup({
   source: 'Admin Page',
   events: {
     'DeleteAdmin Action': emptyProps(),

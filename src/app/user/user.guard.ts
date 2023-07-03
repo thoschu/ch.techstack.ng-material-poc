@@ -16,6 +16,10 @@ export const userGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
     );
 };
 
+export const userGuardAlwaysTrue: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean => {
+  return true;
+};
+
 @Injectable()
 export class UserGuard implements CanActivate {
 

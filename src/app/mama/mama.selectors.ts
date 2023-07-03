@@ -4,8 +4,10 @@ import { MamaState } from './reducers';
 import { State } from '../reducers';
 import { AdminState } from '../admin/reducers';
 
-export const mamaFeatureSelector: MemoizedSelector<object, MamaState, DefaultProjectorFn<MamaState>> = createFeatureSelector<MamaState>('mama');
-export const adminFeatureSelector: MemoizedSelector<object, AdminState, DefaultProjectorFn<AdminState>> = createFeatureSelector<AdminState>('admin');
+export const mamaFeatureSelector: MemoizedSelector<object, MamaState, DefaultProjectorFn<MamaState>> =
+  createFeatureSelector<MamaState>('mama');
+export const adminFeatureSelector: MemoizedSelector<object, AdminState, DefaultProjectorFn<AdminState>> =
+  createFeatureSelector<AdminState>('admin');
 
 export const userSelector: MemoizedSelector<State, string, (s1: MamaState, s2: AdminState) => string> = createSelector(
   mamaFeatureSelector,
