@@ -4,7 +4,5 @@ export const MainActions = createActionGroup({
   source: 'Main',
   events: {
     'Load Mains': emptyProps(),
-    
-    
   }
 });

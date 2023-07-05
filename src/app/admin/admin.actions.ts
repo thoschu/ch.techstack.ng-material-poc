@@ -1,5 +1,5 @@
 import { ActionCreator, ActionCreatorProps, createAction, createActionGroup, emptyProps, props } from '@ngrx/store';
-import {Creator, FunctionWithParametersType, NotAllowedCheck, TypedAction} from '@ngrx/store/src/models';
+import { Creator, FunctionWithParametersType, NotAllowedCheck, TypedAction } from '@ngrx/store/src/models';
 
 import { Admin } from './admin.model';
 
@@ -12,8 +12,7 @@ type ActionGroup<Source extends string, Events extends Record<string, ActionCrea
 };
 
 export const setAdminActionCreator: ActionCreator<'[Admin Page] SetAdmin Action', (props: {admin: Admin<number>}) => ({admin: Admin<number>} & TypedAction<'[Admin Page] SetAdmin Action'>)> = createAction(
-  '[Admin Page] SetAdmin Action',
-  props<{ admin: Admin<number> }>()
+  '[Admin Page] SetAdmin Action', props<{ admin: Admin<number> }>()
 );
 
 export const adminActions: ActionGroup<'Admin Page', {'DeleteAdmin Action': ActionCreatorProps<void>, 'SetAdmin Action': ActionCreatorProps<{ admin: Admin<number> }>}> = createActionGroup({

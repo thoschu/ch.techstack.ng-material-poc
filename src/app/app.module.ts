@@ -1,24 +1,55 @@
-import { NgModule, isDevMode, APP_INITIALIZER } from '@angular/core';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {
+  APP_INITIALIZER, ErrorHandler,
+  Injectable, InjectionToken, Inject,
+  isDevMode, NgModule
+} from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { RootStoreConfig, StoreModule} from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
+import { TypedAction } from '@ngrx/store/src/models';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { delay, map, Observable, Subscription, tap } from 'rxjs';
+import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { delay, tap } from 'rxjs';
+import * as Rollbar from 'rollbar';
 
-import { AdminModule } from './admin/admin.module';
-import { UserComponent } from './user/user.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { reducers, metaReducers, State } from './reducers';
+import { AppEffects } from './app.effects';
+import { appActions } from './app.actions';
+import { AdminModule } from './admin/admin.module';
+import { UserComponent } from './user/user.component';
+import { metaReducers, reducers, Users } from './reducers';
+import { MamaEffects } from './mama/mama.effects';
 import { MamaComponent } from './mama/mama.component';
 import * as fromMama from './mama/reducers';
 import { UserGuard } from './user/user.guard';
-import { EffectsModule } from '@ngrx/effects';
-import { AppEffects } from './app.effects';
-import { MamaEffects } from './mama/mama.effects';
-import { Admin, IAdmin } from './admin/admin.model';
+
+@Injectable()
+export class RollbarErrorHandler implements ErrorHandler {
+  public static readonly ROLLBAR_CONFIG: { accessToken: string, captureUncaught: boolean, captureUnhandledRejections: boolean } = {
+    accessToken: 'af2779614a7646d6835bba39840dd5fa',
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+  };
+  constructor(@Inject(RollbarService) private rollbar: Rollbar) { }
+
+  public handleError(err: any) : void {
+    this.rollbar.error(err.originalError || err);
+  }
+
+  public static ROLLBAR_FACTORY() : Rollbar {
+    return new Rollbar(RollbarErrorHandler.ROLLBAR_CONFIG);
+  }
+}
+
+export function rollbarFactory() {
+  return new Rollbar(RollbarErrorHandler.ROLLBAR_CONFIG);
+}
+
+export const RollbarService: InjectionToken<Rollbar> = new InjectionToken<Rollbar>('rollbar');
 
 @NgModule({
   declarations: [
@@ -33,35 +64,63 @@ import { Admin, IAdmin } from './admin/admin.model';
     HttpClientModule,
     AppRoutingModule,
     AdminModule.forRoot(),
-    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+        strictActionSerializability: true, // e.g Date-Object
+        strictStateSerializability: true
+      }
+    }),
     StoreModule.forFeature(fromMama.mamaFeatureKey, fromMama.reducers, { metaReducers: fromMama.metaReducers }),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     EffectsModule.forRoot([AppEffects]),
     EffectsModule.forFeature([MamaEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    StoreRouterConnectingModule.forRoot({ stateKey: 'router', routerState: RouterState.Minimal })
   ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: AppModule.appInitializerUsingPromises,
-      deps: [HttpClient],
+      deps: [HttpClient, Store],
       multi: true
     },
+    { provide: ErrorHandler, useClass: RollbarErrorHandler },
+    { provide: RollbarService, useFactory: RollbarErrorHandler.ROLLBAR_FACTORY },
     UserGuard
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  private static appInitializerUsingPromises(httpClient: HttpClient): () => Promise<void> {
+  private static readonly URL: URL = new URL("/api/users/",'http://localhost:3100/');
+
+  private static appInitializerUsingPromises(httpClient: HttpClient, store: Store): () => Promise<void> {
+    console.log(AppModule.URL);
     return () => new Promise((resolve, reject): void => {
-        httpClient.get('http://localhost:3100/api/users/')
-          .pipe(delay<Object>(2000))
+        httpClient.get<Users>(AppModule.URL.href)
+          .pipe(tap((result: Users): void => {
+            console.log(result);
+
+            const loadAppsAction: TypedAction<'[App] Load Apps'> = appActions.loadApps();
+
+            store.dispatch(loadAppsAction);
+          }))
+          .pipe(delay<Users>(3000))
           .subscribe(
-            res => {
+            (res: Users): void => {
               console.log('HTTP response', res);
+
+              const loadAppsConfigAction: {app: string | Record<'id' | 'name', string | number>[]} & TypedAction<'[App] Load Apps Config'> =
+                appActions.loadAppsConfig({app: res});
+
+              store.dispatch(loadAppsConfigAction);
+
               resolve();
             },
-            err => {
+            (err: Error): void => {
               console.error('HTTP Error', err);
+
               reject();
             },
             () => console.log('HTTP request completed.')

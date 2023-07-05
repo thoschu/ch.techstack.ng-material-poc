@@ -45,3 +45,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ng add @ngrx/effects@latest 
 ng generate effect adminAdmin --minimal=false --dry-run
 ng generate effect admin/Admin -m admin/admin.module.ts
+
+4ng add @ngrx/router-store
