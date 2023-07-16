@@ -1,18 +1,24 @@
 {
   "name": "ng-material-poc",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
+    "i": "npm install",
     "ci": "npm ci",
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "start": "nx serve ng-material-poc",
+    "server": "npx concurrently 'npm run mocks' 'npm run json-server'",
+    "build": "nx run ng-material-poc:build",
+    "watch": "nx build --watch --configuration development",
+    "test": "nx test",
+    "serve:build": "npx http-server dist/apps/ng-material-poc",
     "mocks": "docker run --name mocks --rm -ti -p 3100:3100 -p 3110:3110 -e MOCKS_LOG=debug mocksserver/main",
     "json-server": "npx json-server --watch db.json",
     "ngrok": "npx ngrok http 4200",
-    "clean": "npm run clean:node_modules",
-    "clean:node_modules": "npx rimraf node_modules"
+    "clean": "npm run clean:package-lock && npm run clean:node_modules",
+    "clean:node_modules": "npx rimraf node_modules",
+    "clean:package-lock": "npx rimraf package-lock.json",
+    "clean:dist": "npx rimraf dist",
+    "clean:dist:ng-material-poc": "npx rimraf dist/apps/ng-material-poc"
   },
   "private": true,
   "dependencies": {
@@ -26,10 +32,12 @@
     "@angular/platform-browser": "^16.0.3",
     "@angular/platform-browser-dynamic": "^16.0.3",
     "@angular/router": "^16.0.3",
+    "@angular/service-worker": "^16.0.3",
     "@ngrx/effects": "^16.0.1",
     "@ngrx/router-store": "^16.0.1",
     "@ngrx/store": "^16.0.1",
     "@ngrx/store-devtools": "^16.0.1",
+    "@nrwl/angular": "^16.5.2",
     "ramda": "^0.29.0",
     "rollbar": "^2.26.2",
     "rxjs": "~7.8.0",
@@ -38,9 +46,14 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.0.2",
+    "@angular-devkit/core": "~16.0.2",
+    "@angular-devkit/schematics": "~16.0.2",
     "@angular/cli": "~16.0.2",
     "@angular/compiler-cli": "^16.0.3",
     "@ngrx/schematics": "^16.0.1",
+    "@nx/js": "16.5.2",
+    "@nx/workspace": "16.5.2",
+    "@schematics/angular": "~16.0.2",
     "@types/jasmine": "~4.3.0",
     "@types/ramda": "^0.29.3",
     "jasmine-core": "~4.5.0",
@@ -49,6 +62,8 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
+    "nx": "16.5.2",
+    "prettier": "^2.6.2",
     "typescript": "~4.9.4"
   }
 }

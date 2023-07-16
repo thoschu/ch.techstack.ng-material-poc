@@ -1,0 +1,101 @@
+{
+  "name": "ng-material-poc",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "generators": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "sourceRoot": "apps/ng-material-poc/src",
+  "prefix": "app",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/ng-material-poc",
+        "index": "apps/ng-material-poc/src/index.html",
+        "main": "apps/ng-material-poc/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/ng-material-poc/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/ng-material-poc/src/favicon.ico",
+          "apps/ng-material-poc/src/assets",
+          "apps/ng-material-poc/src/manifest.webmanifest"
+        ],
+        "styles": [
+          "@angular/material/prebuilt-themes/purple-green.css",
+          "apps/ng-material-poc/src/styles.scss"
+        ],
+        "scripts": [],
+        "serviceWorker": true,
+        "ngswConfigPath": "ngsw-config.json"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "serviceWorker": false
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true,
+          "serviceWorker": false
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "ng-material-poc:build:production"
+        },
+        "development": {
+          "browserTarget": "ng-material-poc:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "ng-material-poc:build"
+      }
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "options": {
+        "polyfills": ["zone.js", "zone.js/testing"],
+        "tsConfig": "apps/ng-material-poc/tsconfig.spec.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/ng-material-poc/src/favicon.ico",
+          "apps/ng-material-poc/src/assets",
+          "apps/ng-material-poc/src/manifest.webmanifest"
+        ],
+        "styles": [
+          "@angular/material/prebuilt-themes/purple-green.css",
+          "apps/ng-material-poc/src/styles.scss"
+        ],
+        "scripts": []
+      }
+    }
+  }
+}
