@@ -9,6 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "mocks": "docker run --name mocks --rm -ti -p 3100:3100 -p 3110:3110 -e MOCKS_LOG=debug mocksserver/main",
+    "json-server": "npx json-server --watch db.json",
     "ngrok": "npx ngrok http 4200",
     "clean": "npm run clean:node_modules",
     "clean:node_modules": "npx rimraf node_modules"

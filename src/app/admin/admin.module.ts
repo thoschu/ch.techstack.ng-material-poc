@@ -9,7 +9,6 @@ import { AdminService } from './admin.service';
 import * as fromAdmin from './reducers';
 import { AdminEffects } from './admin.effects';
 
-
 @NgModule({
   declarations: [
     AdminComponent

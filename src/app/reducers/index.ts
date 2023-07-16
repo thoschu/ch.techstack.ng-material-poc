@@ -17,7 +17,8 @@ import * as Rollbar from 'rollbar';
 import * as fromAdmin from '../admin/reducers';
 import * as fromMama from '../mama/reducers';
 import { appActions } from '../app.actions';
-import {RollbarErrorHandler} from "../app.module";
+
+// import { RollbarErrorHandler } from "../app.module";
 
 export interface State {
   app: AppState,
@@ -77,12 +78,12 @@ export const reducers: ActionReducerMap<State> = {
   router: routerReducer
 };
 
-const rollbar: Rollbar = new Rollbar(RollbarErrorHandler.ROLLBAR_CONFIG);
+// const rollbar: Rollbar = new Rollbar(RollbarErrorHandler.ROLLBAR_CONFIG);
 
 export function loggerDev(reducer: ActionReducer<State>): ActionReducer<State> {
   return (state: State | undefined, action: Action)=> {
 
-    rollbar.info('User opened the app in -DEV-', { state, action });
+    // rollbar.info('User opened the app in -DEV-', { state, action });
 
     return reducer(state, action);
   }
@@ -91,7 +92,7 @@ export function loggerDev(reducer: ActionReducer<State>): ActionReducer<State> {
 export function loggerProd(reducer: ActionReducer<State>): ActionReducer<State> {
   return (state: State | undefined, action: Action)=> {
 
-    rollbar.info('User opened the app in -PROD-', { state, action });
+    // rollbar.info('User opened the app in -PROD-', { state, action });
 
     return reducer(state, action);
   }
