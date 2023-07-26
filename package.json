@@ -7,7 +7,7 @@
     "ng": "ng",
     "start": "nx serve ng-material-poc",
     "server": "npx concurrently 'npm run mocks' 'npm run json-server'",
-    "build": "nx run ng-material-poc:build",
+    "build": "nx build ng-material-poc --prod",
     "watch": "nx build --watch --configuration development",
     "test": "nx test",
     "serve:build": "npx http-server dist/apps/ng-material-poc",

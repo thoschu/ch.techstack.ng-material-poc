@@ -24,21 +24,21 @@ export class AppRoutingModule {
       path: 'user',
       component: UserComponent,
       canActivate: [userGuard, userGuardAlwaysTrue],
-    },
-    {
+    }, {
       path: 'mama',
       component: MamaComponent,
       resolve: {
         base: AppResolver,
       },
-    },
-    { path: 'admin', component: AdminComponent }, // eagerly loaded
-    {
+    }, {
+      path: 'admin', component: AdminComponent  // eagerly loaded
+    }, {
       path: 'main',
       loadChildren: () =>
-        import('./main/main.module').then((m) => m.MainModule),
-    }, // lazy loaded
-    { path: '**', redirectTo: 'mama' },
+        import('./main/main.module').then((m) => m.MainModule)  // lazy loaded
+    }, {
+      path: '**', redirectTo: 'mama'
+    }
   ];
   constructor() {
     console.log('AppRoutingModule constructor');
