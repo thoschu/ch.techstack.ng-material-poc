@@ -19,7 +19,9 @@
     "module": "ES2022",
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"],
-    "paths": {},
+    "paths": {
+      "@/*": ["./apps/ng-material-poc/src/*"],
+    },
     "rootDir": "."
   },
   "angularCompilerOptions": {

@@ -10,6 +10,8 @@ import {
   userGuardAlwaysTrue,
 } from './user/user.guard';
 
+// import {  } from '@/app/main/main.module';
+
 @NgModule({
   imports: [
     RouterModule.forRoot(AppRoutingModule.ROUTES, AppRoutingModule.CONFIG),
@@ -35,7 +37,7 @@ export class AppRoutingModule {
     }, {
       path: 'main',
       loadChildren: () =>
-        import('./main/main.module').then((m) => m.MainModule)  // lazy loaded
+        import('@/app/main/main.module').then((m) => m.MainModule)  // lazy loaded
     }, {
       path: '**', redirectTo: 'mama'
     }
@@ -44,3 +46,5 @@ export class AppRoutingModule {
     console.log('AppRoutingModule constructor');
   }
 }
+
+// AppRoutingModule.prototype.do = function () {};
